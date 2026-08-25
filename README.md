@@ -98,51 +98,106 @@ Open `dashboard/index.html` in your browser and enter admin password: `peda2026`
 
 ---
 
-## 🚀 Production Deployment Instructions
+## 🚀 Production Deployment Sequence (Step-by-Step)
 
-### Step 1: Set Up Supabase Database
-1. Go to [supabase.com](https://supabase.com) and create a free project.
-2. Under **Project Settings** → **Database**, find your **Connection string** (URI mode).
-3. Copy the URI (format: `postgresql://postgres:[YOUR-PASSWORD]@[YOUR-HOST]:5432/postgres`).
+Follow this exact 6-step sequence to deploy backend, database, and frontend smoothly with strict CORS protection:
 
-### Step 2: Deploy Backend to Render
-1. Go to [render.com](https://render.com) and click **New +** → **Web Service**.
-2. Connect your GitHub repository: `prakhar7890/Rakhi`.
-3. Configure the service:
-   - **Name**: `rakhi-surprise-api`
-   - **Root Directory**: `backend`
-   - **Runtime**: `Python 3`
-   - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-   - **Instance Type**: `Free`
-4. Add **Environment Variables**:
-   | Variable | Value |
-   |---|---|
-   | `DATABASE_URL` | `postgresql://postgres:[YOUR-PASSWORD]@[YOUR-HOST]:5432/postgres` |
-   | `ADMIN_PASSWORD` | `choose_your_secure_password` |
-   | `FRONTEND_URL` | `https://your-project.vercel.app` (Add after Vercel deployment) |
-   | `ENVIRONMENT` | `production` |
-5. Click **Create Web Service**. Copy your live URL (e.g., `https://rakhi-surprise-api.onrender.com`).
-6. Test in browser: `https://rakhi-surprise-api.onrender.com/health` ➔ `{"status":"ok"}`.
+```text
+Step 1: Deploy Backend (Render) & Supabase Database
+                      ↓
+Step 2: Deploy Frontend (Vercel)
+                      ↓
+Step 3: Obtain Live Vercel URL
+                      ↓
+Step 4: Set FRONTEND_URL on Render Environment Variables
+                      ↓
+Step 5: Redeploy / Restart Render Web Service
+                      ↓
+Step 6: Test Frontend ➔ Backend API Requests
+```
 
-### Step 3: Configure Frontend & Deploy to Vercel
-1. In `frontend/script.js` (and `script.js`), update `API_CONFIG.BASE_URL`:
+---
+
+### Step 1: Deploy Backend to Render & Connect Supabase
+1. **Set Up Supabase Database**:
+   - Go to [supabase.com](https://supabase.com) and create a free project.
+   - Go to **Project Settings** → **Database**, find your **Connection string (URI mode)**.
+   - Copy the URI (format: `postgresql://postgres:[YOUR-PASSWORD]@[YOUR-HOST]:5432/postgres`).
+2. **Deploy Render Web Service**:
+   - Go to [render.com](https://render.com) and click **New +** → **Web Service**.
+   - Connect your GitHub repository: `prakhar7890/Rakhi`.
+   - Configure:
+     - **Name**: `rakhi-surprise-api`
+     - **Root Directory**: `backend`
+     - **Runtime**: `Python 3`
+     - **Build Command**: `pip install -r requirements.txt`
+     - **Start Command**: `uvicorn main:app --host 0.0.0.0 --port $PORT`
+     - **Instance Type**: `Free`
+   - Add initial **Environment Variables**:
+     | Variable | Value |
+     |---|---|
+     | `DATABASE_URL` | `postgresql://postgres:[YOUR-PASSWORD]@[YOUR-HOST]:5432/postgres` |
+     | `ADMIN_PASSWORD` | `your_secure_admin_password` |
+     | `ENVIRONMENT` | `production` |
+   - Click **Create Web Service**.
+   - Copy your Render backend URL (e.g., `https://rakhi-surprise-api.onrender.com`).
+   - Verify health: Visit `https://rakhi-surprise-api.onrender.com/health` in your browser ➔ `{"status":"ok"}`.
+
+---
+
+### Step 2: Deploy Frontend to Vercel
+1. In `frontend/script.js` (and `script.js`), configure `API_CONFIG.BASE_URL` with your Render URL:
    ```javascript
    const API_CONFIG = {
      BASE_URL: (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
        ? "http://localhost:8000"
-       : "https://rakhi-surprise-api.onrender.com" // <-- Your Render URL
+       : "https://rakhi-surprise-api.onrender.com" // <-- Paste your Render URL here
    };
    ```
-2. Go to [vercel.com](https://vercel.com) and click **Add New...** → **Project**.
-3. Import `prakhar7890/Rakhi`.
-4. Configure:
+2. Commit and push:
+   ```bash
+   git add .
+   git commit -m "Configure live Render backend URL"
+   git push origin main
+   ```
+3. Go to [vercel.com](https://vercel.com) and click **Add New...** → **Project**.
+4. Import `prakhar7890/Rakhi`.
+5. Configuration:
    - **Framework Preset**: `Other`
    - **Root Directory**: `frontend` (or `./`)
    - **Build Command**: *(Leave empty)*
    - **Output Directory**: *(Leave empty)*
-5. Click **Deploy**.
-6. Copy your Vercel URL (e.g., `https://rakhi-surprise.vercel.app`) and update `FRONTEND_URL` in your Render Web Service environment variables.
+6. Click **Deploy**.
+
+---
+
+### Step 3: Obtain Live Vercel URL
+Once deployment completes, copy your live Vercel URL from the Vercel dashboard:
+- Example: `https://rakhi-surprise.vercel.app` (or custom domain).
+
+---
+
+### Step 4: Set `FRONTEND_URL` on Render
+1. Go back to your [Render Dashboard](https://dashboard.render.com).
+2. Select your `rakhi-surprise-api` service → **Environment**.
+3. Add the new environment variable:
+   | Variable | Value |
+   |---|---|
+   | `FRONTEND_URL` | `https://rakhi-surprise.vercel.app` |
+4. Click **Save Changes**.
+
+---
+
+### Step 5: Redeploy / Restart Render Service
+- Click **Manual Deploy** → **Deploy latest commit** (or **Restart Service**) on Render to apply the CORS origin setting.
+
+---
+
+### Step 6: Test Frontend ➔ Backend API Requests
+1. Open your live Vercel website: `https://rakhi-surprise.vercel.app`.
+2. Complete Scene 1 (open envelope) and Scene 2 (verify name/age).
+3. Open DevTools (**F12** → **Network tab**) and verify `POST /api/answer` and `POST /api/milestone` return HTTP `200 OK`.
+4. Open the live admin dashboard (`https://rakhi-surprise.vercel.app/dashboard` or `dashboard/index.html`), enter your `ADMIN_PASSWORD`, and verify that Prerna's live session and answers appear in real time!
 
 ---
 
