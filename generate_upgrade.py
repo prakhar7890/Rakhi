@@ -5359,20 +5359,24 @@ def submit_answer(payload: schemas.AnswerCreate, db: Session = Depends(get_db)):
     ).first()
 
     if existing_answer:
-        existing_answer.answer = payload.answer
-        existing_answer.question_text = payload.question_text
-    else:
-        new_answer = models.SessionAnswer(
-            session_id=payload.session_id,
-            question_id=payload.question_id,
-            question_text=payload.question_text,
-            answer=payload.answer,
-            created_at=datetime.utcnow()
-        )
-        db.add(new_answer)
+        return {
+            "status": "success",
+            "message": "Answer already recorded; original answer preserved.",
+            "idempotent": True,
+            "recorded_answer": existing_answer.answer
+        }
 
+    new_answer = models.SessionAnswer(
+        session_id=payload.session_id,
+        question_id=payload.question_id,
+        question_text=payload.question_text,
+        answer=payload.answer,
+        created_at=datetime.utcnow()
+    )
+    db.add(new_answer)
     db.commit()
-    return {"status": "success", "message": "Answer recorded successfully"}
+
+    return {"status": "success", "message": "Answer recorded successfully", "idempotent": False}
 
 @app.post("/api/milestone", status_code=status.HTTP_200_OK)
 def submit_milestone(payload: schemas.MilestoneCreate, db: Session = Depends(get_db)):

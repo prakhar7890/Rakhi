@@ -65,20 +65,25 @@ def submit_answer(payload: schemas.AnswerCreate, db: Session = Depends(get_db)):
     ).first()
 
     if existing_answer:
-        existing_answer.answer = payload.answer
-        existing_answer.question_text = payload.question_text
-    else:
-        new_answer = models.SessionAnswer(
-            session_id=payload.session_id,
-            question_id=payload.question_id,
-            question_text=payload.question_text,
-            answer=payload.answer,
-            created_at=datetime.utcnow()
-        )
-        db.add(new_answer)
+        # Idempotency Requirement: Preserve original submitted answer, do not create duplicate rows or overwrite
+        return {
+            "status": "success",
+            "message": "Answer already recorded; original answer preserved.",
+            "idempotent": True,
+            "recorded_answer": existing_answer.answer
+        }
 
+    new_answer = models.SessionAnswer(
+        session_id=payload.session_id,
+        question_id=payload.question_id,
+        question_text=payload.question_text,
+        answer=payload.answer,
+        created_at=datetime.utcnow()
+    )
+    db.add(new_answer)
     db.commit()
-    return {"status": "success", "message": "Answer recorded successfully"}
+
+    return {"status": "success", "message": "Answer recorded successfully", "idempotent": False}
 
 @app.post("/api/milestone", status_code=status.HTTP_200_OK)
 def submit_milestone(payload: schemas.MilestoneCreate, db: Session = Depends(get_db)):
@@ -96,16 +101,22 @@ def submit_milestone(payload: schemas.MilestoneCreate, db: Session = Depends(get
         models.SessionMilestone.milestone == payload.milestone
     ).first()
 
-    if not existing_milestone:
-        new_milestone = models.SessionMilestone(
-            session_id=payload.session_id,
-            milestone=payload.milestone,
-            created_at=datetime.utcnow()
-        )
-        db.add(new_milestone)
-        db.commit()
+    if existing_milestone:
+        return {
+            "status": "success",
+            "message": "Milestone already recorded.",
+            "idempotent": True
+        }
 
-    return {"status": "success", "message": "Milestone recorded successfully"}
+    new_milestone = models.SessionMilestone(
+        session_id=payload.session_id,
+        milestone=payload.milestone,
+        created_at=datetime.utcnow()
+    )
+    db.add(new_milestone)
+    db.commit()
+
+    return {"status": "success", "message": "Milestone recorded successfully", "idempotent": False}
 
 @app.post("/api/complete", status_code=status.HTTP_200_OK)
 def complete_session(payload: schemas.CompleteSession, db: Session = Depends(get_db)):
