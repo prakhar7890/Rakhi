@@ -1,0 +1,1474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <meta name="theme-color" content="#1B0C15">
+  <meta name="description" content="An interactive, cinematic Raksha Bandhan surprise mini-game experience crafted by Prakhar for his sister Prerna (Peda).">
+  <title>For Peda • Interactive Rakhi Surprise ✨</title>
+
+  <!-- Google Fonts Preconnect & Styles -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Marck+Script&family=Outfit:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Rozha+One&family=Yatra+One&display=swap" rel="stylesheet">
+
+  <!-- GSAP CDN for smooth animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-cinematic">
+
+  <!-- Interactive Canvas Layers -->
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <canvas id="fireworks-canvas" aria-hidden="true"></canvas>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+  <canvas id="hearts-canvas" aria-hidden="true"></canvas>
+  <canvas id="sparkle-cursor-canvas" aria-hidden="true"></canvas>
+
+  <!-- Top Minimalist Interactive Story Bar -->
+  <header class="top-story-bar" role="banner">
+    <div class="top-bar-left">
+      <div class="brand-chip" id="brand-badge">
+        <span class="brand-icon">🌸</span>
+        <span class="brand-text">For Peda</span>
+      </div>
+      <div class="achievement-pill" id="achievement-counter-badge" title="Trophies Unlocked">
+        <span class="ach-trophy-icon">🏆</span>
+        <span class="ach-count-text" id="ach-count-display">0/7</span>
+      </div>
+    </div>
+
+    <!-- 27-Step Progress Indicator -->
+    <div class="story-progress-indicator" aria-label="Surprise Story Progress">
+      <div class="progress-track">
+        <div class="progress-bar-fill" id="progress-bar-fill"></div>
+      </div>
+      <div class="progress-dots-row" id="progress-dots-row"></div>
+    </div>
+
+    <div class="top-controls">
+      <button id="sound-toggle" class="control-pill-btn" aria-label="Toggle Sound Effects">
+        <span class="sound-icon">🔊</span>
+        <span class="sound-label">Sound</span>
+      </button>
+      <button id="easter-egg-1-btn" class="control-pill-btn warning-pill" title="Do Not Touch">
+        <span>🚫 Don't touch</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Achievement Unlock Notification Container -->
+  <div id="achievement-toast-container" class="achievement-toast-container" aria-live="polite"></div>
+
+  <!-- Sibling Reaction Toast Notification Container -->
+  <div id="reaction-toast-container" class="reaction-toast-container" aria-live="polite"></div>
+
+  <!-- Audio Element for Finale Rakhi Song -->
+  <audio id="rakhi-audio-element" preload="auto">
+    <source src="assets/song.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Main Viewport for Interactive Story Screens -->
+  <main class="story-viewport" id="story-viewport">
+
+    <!-- ====================================================================
+         SCENE 01: INTERACTIVE WAX SEAL SWIPE & DRAG ENVELOPE
+         ==================================================================== -->
+    <section class="story-screen active dark-scene" id="scene-1" data-scene="1">
+      <div class="screen-box opening-mystery-card">
+        <div class="screen-badge glow-badge">
+          <span>✨ Chapter 01 • The Beginning</span>
+        </div>
+
+        <div class="cinematic-text-stream">
+          <h1 class="cinematic-line c-line-1" id="s1-line-1">Wait.</h1>
+          <p class="cinematic-line c-line-2" id="s1-line-2">Before you enter this experience...</p>
+          <h2 class="cinematic-line c-line-3" id="s1-line-3">You must physically break the wax seal.</h2>
+        </div>
+
+        <!-- Interactive Wax Seal Envelope Drag/Swipe Stage -->
+        <div class="envelope-drag-stage" id="envelope-drag-stage">
+          <div class="interactive-envelope-body" id="interactive-envelope-body">
+            <div class="env-front-crease"></div>
+            <div class="seal-track" id="seal-track">
+              <div class="seal-drag-handle" id="seal-drag-handle" draggable="false">
+                <span class="seal-letter">P</span>
+                <span class="seal-sparkle">✨</span>
+              </div>
+              <div class="seal-track-hint">
+                <span class="track-arrow">➔</span>
+                <span class="track-text">Swipe / Drag Seal to Open</span>
+                <span class="track-arrow">➔</span>
+              </div>
+            </div>
+          </div>
+          <p class="seal-feedback-hint" id="seal-feedback-hint">Drag the seal all the way to the right!</p>
+        </div>
+
+        <div class="s1-reveal-msg" id="s1-reveal-msg" style="display: none;">
+          <p>💌 Seal broken! Unfolding your surprise...</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 02: SIBLING SECURITY SYSTEM SCANNER
+         ==================================================================== -->
+    <section class="story-screen dark-scene" id="scene-2" data-scene="2">
+      <div class="screen-box futuristic-scanner-card">
+        <div class="screen-badge tech-badge">
+          <span>🛡️ SIBLING SECURITY CLEARANCE v2.4</span>
+        </div>
+
+        <h1 class="scene-title tech-title">Identity Verification</h1>
+        <p class="scene-subtitle" style="color: #FCE7F3;">Only the official Gadhi is permitted past this point.</p>
+
+        <form id="form-identity-check" class="auth-form-terminal" autocomplete="off">
+          <div class="terminal-input-group">
+            <label for="input-user-name" class="terminal-label">SCAN SUBJECT NAME:</label>
+            <input type="text" id="input-user-name" class="terminal-input tech-input" placeholder="Type your name here..." required autofocus>
+          </div>
+
+          <div class="terminal-input-group" id="age-check-step" style="display: none;">
+            <label for="input-user-age-sec" class="terminal-label">OFFICIAL SIBLING AGE:</label>
+            <input type="number" id="input-user-age-sec" class="terminal-input tech-input" placeholder="Enter age..." min="1" max="100">
+          </div>
+
+          <p class="validation-feedback" id="identity-validation-msg" aria-live="polite"></p>
+
+          <div class="screen-action-wrap" id="identity-btn-wrap">
+            <button type="submit" id="btn-verify-identity" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content" id="btn-identity-label">Scan Biometrics</span>
+            </button>
+          </div>
+        </form>
+
+        <div class="scanning-terminal-box" id="scanning-terminal" style="display: none;">
+          <div class="scan-laser-line"></div>
+          <p class="scan-status-text">⚡ SCANNING DNA & DRAMA LEVELS...</p>
+          <div class="scan-progress-bar">
+            <div class="scan-bar-fill" id="scan-bar-fill"></div>
+          </div>
+        </div>
+
+        <div class="identity-card-badge" id="identity-card-badge" style="display: none;">
+          <div class="id-header">SIBLING ID VERIFIED ✅</div>
+          <div class="id-row"><span>NAME:</span> <strong class="text-green">Prerna Gupta</strong></div>
+          <div class="id-row"><span>OFFICIAL TITLE:</span> <strong>Maharani Peda Devi</strong></div>
+          <div class="id-row"><span>STATUS:</span> <strong>Permanent Headache</strong></div>
+          <div class="id-row"><span>CLEARANCE:</span> <strong class="text-green">AUTHORIZED</strong></div>
+          <div class="id-footer">👑 Welcome, Peda.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 03: LIGHT THE FESTIVE DIYAS (DARK ROOM INTERACTION)
+         ==================================================================== -->
+    <section class="story-screen dark-scene festive-dark-room" id="scene-3" data-scene="3">
+      <div class="screen-box festive-room-box">
+        <div class="screen-badge glow-badge">
+          <span>🪔 Chapter 03 • Festive Illumination</span>
+        </div>
+
+        <h1 class="festive-room-title">Bhena, pehle thoda roshni kar!</h1>
+        <p class="festive-room-subtitle" id="diya-instruction-text">Tap on all 5 unlit diyas scattered in the room to illuminate the surprise.</p>
+
+        <div class="diya-counter-badge" id="diya-counter-badge">
+          <span>DIYAS LIT: </span><strong id="diyas-lit-count">0</strong> / 5
+        </div>
+
+        <!-- Interactive Dark Festive Scene with 5 Tapable Diyas -->
+        <div class="festive-interactive-stage" id="festive-diyas-stage">
+          <div class="room-ambient-overlay" id="room-ambient-overlay"></div>
+          <div class="room-decorations-layer" id="room-decorations-layer">
+            <span class="garland-decor g-1">🌸 🌼 🌸 🌼 🌸</span>
+            <span class="garland-decor g-2">🌼 🌸 🌼 🌸 🌼</span>
+          </div>
+
+          <!-- 5 Tapable Diyas scattered in room -->
+          <button class="interactive-diya-btn" id="diya-1" data-diya="1" style="top: 25%; left: 18%;">
+            <span class="diya-flame" id="flame-1">🔥</span>
+            <span class="diya-base">🪔</span>
+          </button>
+
+          <button class="interactive-diya-btn" id="diya-2" data-diya="2" style="top: 20%; right: 20%;">
+            <span class="diya-flame" id="flame-2">🔥</span>
+            <span class="diya-base">🪔</span>
+          </button>
+
+          <button class="interactive-diya-btn" id="diya-3" data-diya="3" style="top: 60%; left: 12%;">
+            <span class="diya-flame" id="flame-3">🔥</span>
+            <span class="diya-base">🪔</span>
+          </button>
+
+          <button class="interactive-diya-btn" id="diya-4" data-diya="4" style="top: 65%; right: 15%;">
+            <span class="diya-flame" id="flame-4">🔥</span>
+            <span class="diya-base">🪔</span>
+          </button>
+
+          <button class="interactive-diya-btn center-diya" id="diya-5" data-diya="5" style="top: 48%; left: 47%;">
+            <span class="diya-flame" id="flame-5">🔥</span>
+            <span class="diya-base">🪔</span>
+          </button>
+        </div>
+
+        <div class="diya-completion-card" id="diya-completion-card" style="display: none;">
+          <p class="diya-success-msg">✨ Good job, Gadhi! The festival has officially begun.</p>
+          <div class="screen-action-wrap">
+            <button id="btn-diya-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Continue to Mystery ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 04: FIND THE HIDDEN RAKHI (EXPLORATION GAME)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-4" data-scene="4">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🔍 Chapter 04 • Secret Detective</span>
+        </div>
+
+        <h1 class="scene-title">Find The Hidden Rakhi!</h1>
+        <p class="scene-subtitle">A special golden Rakhi is hidden somewhere in this festive scene. Tap around to find it!</p>
+
+        <!-- Decorative Interactive Search Area -->
+        <div class="hidden-search-stage" id="hidden-rakhi-search-stage">
+          <div class="search-item-dec" id="search-gift-1" style="top: 20%; left: 15%;" title="Festive Gift Box">🎁</div>
+          <div class="search-item-dec" id="search-flower-1" style="top: 15%; right: 25%;" title="Marigold Garland">🌼</div>
+          <div class="search-item-dec" id="search-sweet-1" style="top: 68%; left: 22%;" title="Sweet Box">🍬</div>
+          <div class="search-item-dec" id="search-photo-1" style="top: 30%; right: 12%;" title="Photo Frame">🖼️</div>
+          <div class="search-item-dec" id="search-candle-1" style="top: 72%; right: 30%;" title="Candle">🕯️</div>
+          <div class="search-item-dec" id="search-diya-decor" style="top: 45%; left: 8%;" title="Diya">🪔</div>
+
+          <!-- The Hidden Clickable Rakhi (Hidden behind flower) -->
+          <div class="hidden-target-rakhi" id="hidden-target-rakhi" title="Secret Rakhi">
+            <span class="secret-rakhi-sparkle">✨</span>
+            <span class="secret-rakhi-icon">🏵️</span>
+          </div>
+        </div>
+
+        <div class="rakhi-found-banner" id="rakhi-found-banner" style="display: none;">
+          <h2 class="rakhi-found-title">🎉 RAKHI FOUND!</h2>
+          <p class="rakhi-found-sub">+100 Bhena Points awarded to Detective Peda!</p>
+          <div class="screen-action-wrap">
+            <button id="btn-found-rakhi-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Solve Photo Jigsaw ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 05: 9-PIECE PHOTO JIGSAW PUZZLE (REAL PHOTO)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-5" data-scene="5">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🧩 Chapter 05 • Memory Jigsaw</span>
+        </div>
+
+        <h1 class="scene-title">Assemble The Memory</h1>
+        <p class="scene-subtitle">Tap two tiles to swap their positions and rebuild this classic photo!</p>
+
+        <!-- 3x3 Puzzle Board -->
+        <div class="puzzle-board-container">
+          <div class="puzzle-grid-9" id="puzzle-grid-9" aria-label="Photo Jigsaw Puzzle">
+            <!-- 9 Puzzle Tiles dynamically generated with assets/prerna-1.jpg -->
+          </div>
+        </div>
+
+        <div class="puzzle-controls-row">
+          <button id="btn-puzzle-hint" class="btn-secondary-pill">💡 Hint / Auto-Solve</button>
+          <span class="puzzle-moves-counter" id="puzzle-moves-counter">Moves: 0</span>
+        </div>
+
+        <div class="puzzle-solved-card" id="puzzle-solved-card" style="display: none;">
+          <div class="solved-camera-flash">📸</div>
+          <h2 class="solved-caption-title">Memory Unlocked! ✨</h2>
+          <p class="solved-caption-text">"Look at that smile. Even after all the fighting, some moments are pure gold."</p>
+          <div class="screen-action-wrap">
+            <button id="btn-puzzle-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Scratch Golden Secret ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 06: DIGITAL SCRATCH CARD INTERACTION
+         ==================================================================== -->
+    <section class="story-screen" id="scene-6" data-scene="6">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>✨ Chapter 06 • Golden Scratch Secret</span>
+        </div>
+
+        <h1 class="scene-title">Scratch This, Nautanki!</h1>
+        <p class="scene-subtitle">Use your finger or mouse to rub and scratch away the gold foil layer.</p>
+
+        <div class="scratch-card-wrapper" id="scratch-card-wrapper">
+          <!-- Hidden Message Underneath -->
+          <div class="scratch-hidden-content" id="scratch-hidden-content">
+            <div class="scratch-gold-icon">👑</div>
+            <h2 class="scratch-revealed-text">"You're one of my favorite people."</h2>
+            <p class="scratch-revealed-sub">— Even when you're stealing 80% of the snacks.</p>
+          </div>
+
+          <!-- Canvas Scratch Layer -->
+          <canvas id="scratch-canvas" class="scratch-canvas" width="400" height="240"></canvas>
+        </div>
+
+        <div class="scratch-progress-indicator">
+          <span>Foil Cleared: </span><strong id="scratch-percent-display">0%</strong>
+        </div>
+
+        <div class="scratch-completed-wrap" id="scratch-completed-wrap" style="display: none;">
+          <p class="scratch-success-text">SECRET UNLOCKED ❤️</p>
+          <div class="screen-action-wrap">
+            <button id="btn-scratch-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Open Memory Cards ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 07: 6 MYSTERY 3D MEMORY FLIP CARDS
+         ==================================================================== -->
+    <section class="story-screen" id="scene-7" data-scene="7">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🃏 Chapter 07 • Sibling Memory Vault</span>
+        </div>
+
+        <h1 class="scene-title">Flip The Mystery Cards</h1>
+        <p class="scene-subtitle">Tap each card to reveal what's hidden beneath. Discover all 6 to continue!</p>
+
+        <div class="flip-cards-tracker">
+          <span>MEMORIES FOUND: </span><strong id="flip-cards-found-count">0</strong> / 6
+        </div>
+
+        <!-- 6 Flip Cards Grid -->
+        <div class="flip-cards-grid-6" id="flip-cards-grid-6">
+          <div class="flip-card-item" data-card="1">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><span>?</span></div>
+              <div class="flip-card-back">
+                <div class="card-icon">🍟</div>
+                <div class="card-text">Food Chor detected in 4K!</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card-item" data-card="2">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><span>?</span></div>
+              <div class="flip-card-back">
+                <div class="card-icon">🎭</div>
+                <div class="card-text">Professional Nautanki Specialist.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card-item" data-card="3">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><span>?</span></div>
+              <div class="flip-card-back">
+                <div class="card-icon">📸</div>
+                <div class="card-text">One of my favorite childhood memories.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card-item" data-card="4">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><span>?</span></div>
+              <div class="flip-card-back">
+                <div class="card-icon">💆‍♂️</div>
+                <div class="card-text">Permanent Headache, but mine.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card-item" data-card="5">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><span>?</span></div>
+              <div class="flip-card-back">
+                <div class="card-icon">😂</div>
+                <div class="card-text">Still can't believe you're my sister.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flip-card-item" data-card="6">
+            <div class="flip-card-inner">
+              <div class="flip-card-front"><span>?</span></div>
+              <div class="flip-card-back">
+                <div class="card-icon">❤️</div>
+                <div class="card-text">Heart of gold behind all the daily drama.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-action-wrap" id="flip-cards-next-wrap" style="display: none;">
+          <button id="btn-flip-cards-next" class="btn-primary-glow">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Play Matching Game ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 08: SIBLING MATCHING GAME (PAIRS)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-8" data-scene="8">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🎮 Chapter 08 • Sibling Match-Up</span>
+        </div>
+
+        <h1 class="scene-title">Match The Sibling Pairs</h1>
+        <p class="scene-subtitle">Find the 4 matching sibling word pairs by flipping two cards at a time.</p>
+
+        <div class="match-score-bar">
+          <span>PAIRS MATCHED: </span><strong id="match-pairs-count">0</strong> / 4
+        </div>
+
+        <!-- 8 Cards Matching Grid -->
+        <div class="matching-grid-8" id="matching-grid-8">
+          <!-- Dynamically populated and shuffled in script.js -->
+        </div>
+
+        <div class="matching-complete-banner" id="matching-complete-banner" style="display: none;">
+          <p class="match-success-title">🏆 SIBLING COMPATIBILITY: QUESTIONABLY HIGH</p>
+          <div class="screen-action-wrap">
+            <button id="btn-matching-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Choose Your Path ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 09: CHOOSE YOUR BRANCHING PATH
+         ==================================================================== -->
+    <section class="story-screen" id="scene-9" data-scene="9">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🧭 Chapter 09 • The Sibling Dilemma</span>
+        </div>
+
+        <h1 class="scene-title">Your Bhai Has ₹500.</h1>
+        <p class="scene-subtitle">What is the most scientifically accurate brother move?</p>
+
+        <!-- 4 Branching Interactive Choice Cards -->
+        <div class="branching-choices-grid" id="branching-choices-grid">
+          <button class="branch-choice-card" data-choice="a">
+            <span class="branch-icon">💸</span>
+            <strong class="branch-label">A: Give it all to Bhena (Peda)</strong>
+            <span class="branch-desc">The fairytale sister wish</span>
+          </button>
+
+          <button class="branch-choice-card" data-choice="b">
+            <span class="branch-icon">🍕</span>
+            <strong class="branch-label">B: Buy secret food for himself</strong>
+            <span class="branch-desc">Survival instincts activated</span>
+          </button>
+
+          <button class="branch-choice-card" data-choice="c">
+            <span class="branch-icon">🤫</span>
+            <strong class="branch-label">C: Pretend he forgot his wallet</strong>
+            <span class="branch-desc">100% effective defense strategy</span>
+          </button>
+
+          <button class="branch-choice-card" data-choice="d">
+            <span class="branch-icon">🏃‍♂️</span>
+            <strong class="branch-label">D: Run away immediately</strong>
+            <span class="branch-desc">Cardio + peace of mind</span>
+          </button>
+        </div>
+
+        <div class="branch-reaction-box" id="branch-reaction-box" style="display: none;">
+          <p class="branch-reaction-text" id="branch-reaction-text"></p>
+          <div class="screen-action-wrap">
+            <button id="btn-branch-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Continue Decision Quiz ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 10: SIBLING DECISION DRAG QUIZ
+         ==================================================================== -->
+    <section class="story-screen" id="scene-10" data-scene="10">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🎯 Chapter 10 • Drag The Choice</span>
+        </div>
+
+        <h1 class="scene-title">What Would Bhai Order?</h1>
+        <p class="scene-subtitle">You just said "I'm not hungry." Drag Bhai's true order onto the plate below!</p>
+
+        <!-- Draggable Objects -->
+        <div class="food-drag-sources-row" id="food-drag-sources-row">
+          <div class="draggable-food-item" id="drag-pizza" data-food="Pizza" draggable="true">
+            <span class="food-emoji">🍕</span>
+            <span class="food-name">Extra Large Pizza</span>
+          </div>
+          <div class="draggable-food-item" id="drag-choc" data-food="Chocolate" draggable="true">
+            <span class="food-emoji">🍫</span>
+            <span class="food-name">Secret Chocolate</span>
+          </div>
+          <div class="draggable-food-item" id="drag-burger" data-food="Burger" draggable="true">
+            <span class="food-emoji">🍔</span>
+            <span class="food-name">Extra Fries & Burger</span>
+          </div>
+        </div>
+
+        <!-- Decision Dropzone Plate -->
+        <div class="decision-dropzone-plate" id="decision-dropzone-plate">
+          <div class="plate-inner-ring">
+            <span class="plate-placeholder-text">🎯 Drag Your Choice Onto The Plate</span>
+          </div>
+        </div>
+
+        <div class="decision-reaction-card" id="decision-reaction-card" style="display: none;">
+          <h2 class="decision-title" id="decision-title">Correct!</h2>
+          <p class="decision-sub" id="decision-sub">"Because 5 minutes later, you will eat half of it anyway."</p>
+          <div class="screen-action-wrap">
+            <button id="btn-decision-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Build Custom Rakhi ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 11: BUILD YOUR OWN RAKHI (CUSTOMIZER)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-11" data-scene="11">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🎨 Chapter 11 • Rakhi Workshop</span>
+        </div>
+
+        <h1 class="scene-title">Build Your Custom Rakhi</h1>
+        <p class="scene-subtitle">Design your official Rakhi thread and centerpiece!</p>
+
+        <!-- Live Rakhi Custom Preview -->
+        <div class="rakhi-custom-preview-stage" id="rakhi-custom-preview-stage">
+          <div class="custom-thread-line" id="preview-thread"></div>
+          <div class="custom-center-element" id="preview-center">🏵️</div>
+          <div class="custom-jewel-element" id="preview-jewel">✨</div>
+        </div>
+
+        <!-- Customization Options -->
+        <div class="rakhi-options-container">
+          <!-- Thread Color -->
+          <div class="custom-option-group">
+            <label class="custom-opt-label">1. Thread Color:</label>
+            <div class="color-swatches-row">
+              <button class="color-swatch-btn active" data-thread="#E11D48" style="background: #E11D48;" title="Scarlet Red"></button>
+              <button class="color-swatch-btn" data-thread="#EC4899" style="background: #EC4899;" title="Rose Pink"></button>
+              <button class="color-swatch-btn" data-thread="#F59E0B" style="background: #F59E0B;" title="Royal Gold"></button>
+              <button class="color-swatch-btn" data-thread="#8B5CF6" style="background: #8B5CF6;" title="Silk Purple"></button>
+            </div>
+          </div>
+
+          <!-- Center Motif -->
+          <div class="custom-option-group">
+            <label class="custom-opt-label">2. Center Motif:</label>
+            <div class="motif-buttons-row">
+              <button class="motif-btn active" data-motif="🏵️">Traditional</button>
+              <button class="motif-btn" data-motif="💖">Heart</button>
+              <button class="motif-btn" data-motif="⭐">Star</button>
+              <button class="motif-btn" data-motif="🌸">Lotus</button>
+            </div>
+          </div>
+
+          <!-- Decoration -->
+          <div class="custom-option-group">
+            <label class="custom-opt-label">3. Accent Charm:</label>
+            <div class="motif-buttons-row">
+              <button class="charm-btn active" data-charm="✨">Glitter</button>
+              <button class="charm-btn" data-charm="💎">Diamond</button>
+              <button class="charm-btn" data-charm="🪞">Mirror</button>
+              <button class="charm-btn" data-charm="👑">Crown</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-action-wrap">
+          <button id="btn-assemble-rakhi" class="btn-grand-gold">
+            <span class="btn-shine"></span>
+            <span class="btn-content">✨ Assemble My Rakhi ✨</span>
+          </button>
+          <button id="btn-assembled-next" class="btn-primary-glow" style="display: none;">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Draw for Bhai ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 12: DIGITAL DRAWING CANVAS FOR BHAI
+         ==================================================================== -->
+    <section class="story-screen" id="scene-12" data-scene="12">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🖌️ Chapter 12 • Digital Canvas</span>
+        </div>
+
+        <h1 class="scene-title">Draw Something For Bhai</h1>
+        <p class="scene-subtitle">Doodle a drawing, write a funny message, or sign your sister autograph!</p>
+
+        <!-- Canvas Drawing Box -->
+        <div class="drawing-canvas-wrapper">
+          <canvas id="doodle-canvas" class="doodle-canvas" width="480" height="260"></canvas>
+        </div>
+
+        <div class="drawing-toolbar">
+          <div class="color-palette-mini">
+            <button class="brush-color-btn active" data-color="#E11D48" style="background: #E11D48;"></button>
+            <button class="brush-color-btn" data-color="#F59E0B" style="background: #F59E0B;"></button>
+            <button class="brush-color-btn" data-color="#8B5CF6" style="background: #8B5CF6;"></button>
+            <button class="brush-color-btn" data-color="#1B0C15" style="background: #1B0C15;"></button>
+          </div>
+          <button id="btn-canvas-undo" class="btn-secondary-pill">Undo</button>
+          <button id="btn-canvas-clear" class="btn-secondary-pill">Clear</button>
+          <button id="btn-canvas-done" class="btn-primary-glow" style="padding: 8px 22px; font-size: 0.9rem;">Done 🎨</button>
+        </div>
+
+        <div class="drawing-saved-banner" id="drawing-saved-banner" style="display: none;">
+          <p class="drawing-success-text">🎉 Masterpiece detected! Archived in the brother vault.</p>
+          <div class="screen-action-wrap">
+            <button id="btn-drawing-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Test Heart Tolerance ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 13: HEART TOLERANCE METER (RAPID TAP/HOLD)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-13" data-scene="13">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>💓 Chapter 13 • Sibling Tolerance Meter</span>
+        </div>
+
+        <h1 class="scene-title">Brother Tolerance Gauge</h1>
+        <p class="scene-subtitle">Repeatedly tap or hold the heart to measure how much you tolerate your Bhai!</p>
+
+        <div class="heart-gauge-container">
+          <div class="giant-beating-heart" id="giant-beating-heart">
+            <span class="heart-icon-center">❤️</span>
+            <div class="heart-pulse-waves"></div>
+          </div>
+
+          <div class="heart-meter-track">
+            <div class="heart-meter-fill" id="heart-meter-fill"></div>
+          </div>
+          <div class="heart-percentage-text" id="heart-percentage-text">Tolerance: 0%</div>
+        </div>
+
+        <div class="screen-action-wrap">
+          <button id="btn-pump-heart" class="btn-grand-gold">
+            <span class="btn-shine"></span>
+            <span class="btn-content">💓 TAP / PUMP HEART 💓</span>
+          </button>
+        </div>
+
+        <div class="heart-maxed-card" id="heart-maxed-card" style="display: none;">
+          <h2 class="heart-maxed-title">Tolerance Level: Suspiciously High! 📈</h2>
+          <p class="heart-maxed-sub">"Okay, I know you love your brother."</p>
+          <div class="screen-action-wrap">
+            <button id="btn-heart-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Hold To Reveal ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 14: HOLD-TO-REVEAL 3S MYSTERY
+         ==================================================================== -->
+    <section class="story-screen dark-scene" id="scene-14" data-scene="14">
+      <div class="screen-box glass-card">
+        <div class="screen-badge glow-badge">
+          <span>⏳ Chapter 14 • Unfiltered Truth</span>
+        </div>
+
+        <h1 class="scene-title" style="color: #FDE68A;">What Bhai Really Thinks</h1>
+        <p class="scene-subtitle" style="color: #FCE7F3;">Press and hold the button for 3 seconds without letting go.</p>
+
+        <!-- 3-Second Hold Button with SVG Progress Ring -->
+        <div class="hold-button-stage" id="hold-button-stage">
+          <div class="hold-svg-ring-wrap">
+            <svg class="hold-svg-ring" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="54"></circle>
+              <circle class="ring-fill" id="hold-ring-fill" cx="60" cy="60" r="54"></circle>
+            </svg>
+            <button class="hold-action-btn" id="btn-hold-action">
+              <span>HOLD</span>
+            </button>
+          </div>
+          <p class="hold-status-hint" id="hold-status-hint">Press and hold...</p>
+        </div>
+
+        <div class="hold-revealed-card" id="hold-revealed-card" style="display: none;">
+          <p class="hold-revealed-p1">"You're annoying..."</p>
+          <p class="hold-revealed-p2">"But you're my favorite annoying person in the world."</p>
+          <div class="screen-action-wrap">
+            <button id="btn-hold-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Trigger Chaos ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 15: SCREEN SHAKE / RAPID TAP CHAOS
+         ==================================================================== -->
+    <section class="story-screen" id="scene-15" data-scene="15">
+      <div class="screen-box glass-card" id="shake-card-box">
+        <div class="screen-badge warning-badge">
+          <span>🌪️ Chapter 15 • Sibling Turbulence</span>
+        </div>
+
+        <h1 class="scene-title">Shake Things Up!</h1>
+        <p class="scene-subtitle">Tap rapidly 8 times to shake the screen and clear the sibling energy!</p>
+
+        <div class="shake-interactive-stage">
+          <div class="shake-vortex-icon" id="shake-vortex-icon">💥</div>
+          <div class="shake-tap-counter">Taps: <strong id="shake-taps-display">0</strong> / 8</div>
+        </div>
+
+        <div class="screen-action-wrap">
+          <button id="btn-shake-tap" class="btn-grand-gold">
+            <span class="btn-shine"></span>
+            <span class="btn-content">⚡ TAP RAPIDLY TO SHAKE ⚡</span>
+          </button>
+        </div>
+
+        <div class="shake-resolved-card" id="shake-resolved-card" style="display: none;">
+          <h2 class="shake-resolved-title">Okay okay, Peda! Enough violence. 😂</h2>
+          <p class="shake-resolved-sub">Sibling equilibrium successfully restored.</p>
+          <div class="screen-action-wrap">
+            <button id="btn-shake-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Search Hidden Objects ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 16: FESTIVE HIDDEN OBJECT HUNT (5 ITEMS)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-16" data-scene="16">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🕵️‍♀️ Chapter 16 • Festive Hunt</span>
+        </div>
+
+        <h1 class="scene-title">Find 5 Festive Treasures</h1>
+        <p class="scene-subtitle">Find: 🪔 Diya, 🌸 Flower, 🎁 Gift, 🍬 Peda Sweet, 💖 Love Note.</p>
+
+        <div class="hunt-tracker-bar">
+          <span>OBJECTS FOUND: </span><strong id="hunt-found-count">0</strong> / 5
+        </div>
+
+        <!-- Interactive 5-Item Hunt Stage -->
+        <div class="festive-hunt-board" id="festive-hunt-board">
+          <button class="hunt-obj-item" data-hunt="1" style="top: 15%; left: 12%;" title="Diya">🪔</button>
+          <button class="hunt-obj-item" data-hunt="2" style="top: 25%; right: 18%;" title="Marigold">🌸</button>
+          <button class="hunt-obj-item" data-hunt="3" style="top: 70%; left: 18%;" title="Gift Box">🎁</button>
+          <button class="hunt-obj-item" data-hunt="4" style="top: 65%; right: 22%;" title="Peda Sweet">🍬</button>
+          <button class="hunt-obj-item" data-hunt="5" style="top: 42%; left: 46%;" title="Love Note">💖</button>
+        </div>
+
+        <div class="hunt-completed-card" id="hunt-completed-card" style="display: none;">
+          <h2 class="hunt-success-title">🎉 Detective Peda has completed the mission!</h2>
+          <div class="screen-action-wrap">
+            <button id="btn-hunt-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Pick Your Sweet ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 17: OFFICIAL BHENA SWEET PICKER
+         ==================================================================== -->
+    <section class="story-screen" id="scene-17" data-scene="17">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🍬 Chapter 17 • The Sweet Truth</span>
+        </div>
+
+        <h1 class="scene-title">Choose Your Official Sweet</h1>
+        <p class="scene-subtitle">Select your favorite Indian sweet from the royal platter:</p>
+
+        <div class="sweets-platter-grid" id="sweets-platter-grid">
+          <button class="sweet-card-btn" data-sweet="Peda">
+            <span class="sweet-emoji">🟤</span>
+            <strong class="sweet-name">Peda</strong>
+          </button>
+          <button class="sweet-card-btn" data-sweet="Gulab Jamun">
+            <span class="sweet-emoji">🌰</span>
+            <strong class="sweet-name">Gulab Jamun</strong>
+          </button>
+          <button class="sweet-card-btn" data-sweet="Rasgulla">
+            <span class="sweet-emoji">⚪</span>
+            <strong class="sweet-name">Rasgulla</strong>
+          </button>
+          <button class="sweet-card-btn" data-sweet="Jalebi">
+            <span class="sweet-emoji">🥨</span>
+            <strong class="sweet-name">Jalebi</strong>
+          </button>
+          <button class="sweet-card-btn" data-sweet="Kaju Katli">
+            <span class="sweet-emoji">🔷</span>
+            <strong class="sweet-name">Kaju Katli</strong>
+          </button>
+        </div>
+
+        <div class="sweet-verdict-box" id="sweet-verdict-box" style="display: none;">
+          <p class="sweet-verdict-p1" id="sweet-verdict-p1"></p>
+          <p class="sweet-verdict-p2" id="sweet-verdict-p2">"Incorrect. You're still Peda. 👑"</p>
+          <div class="screen-action-wrap">
+            <button id="btn-sweet-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Pop The Balloons ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 18: POP THE FLOATING BALLOONS (5 BALLOONS)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-18" data-scene="18">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🎈 Chapter 18 • Balloon Revelations</span>
+        </div>
+
+        <h1 class="scene-title">Pop The Floating Balloons</h1>
+        <p class="scene-subtitle">Tap each floating balloon to pop it and reveal a brotherly truth!</p>
+
+        <div class="balloons-popped-tracker">
+          <span>BALLOONS POPPED: </span><strong id="balloons-popped-count">0</strong> / 5
+        </div>
+
+        <!-- 5 Floating Interactive Balloons -->
+        <div class="balloons-floating-arena" id="balloons-floating-arena">
+          <div class="floating-balloon-item b-1" data-b="1">
+            <span class="balloon-icon">🎈</span>
+            <span class="balloon-tag">Truth #1</span>
+          </div>
+          <div class="floating-balloon-item b-2" data-b="2">
+            <span class="balloon-icon">🎈</span>
+            <span class="balloon-tag">Truth #2</span>
+          </div>
+          <div class="floating-balloon-item b-3" data-b="3">
+            <span class="balloon-icon">🎈</span>
+            <span class="balloon-tag">Truth #3</span>
+          </div>
+          <div class="floating-balloon-item b-4" data-b="4">
+            <span class="balloon-icon">🎈</span>
+            <span class="balloon-tag">Truth #4</span>
+          </div>
+          <div class="floating-balloon-item b-5" data-b="5">
+            <span class="balloon-icon">🎈</span>
+            <span class="balloon-tag">Truth #5</span>
+          </div>
+        </div>
+
+        <!-- Live Message Log from Popped Balloons -->
+        <div class="balloon-popped-messages-log" id="balloon-popped-messages-log"></div>
+
+        <div class="screen-action-wrap" id="balloons-next-wrap" style="display: none;">
+          <button id="btn-balloons-next" class="btn-primary-glow">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Open Photo Album ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 19: DIGITAL INTERACTIVE PHOTO ALBUM (PAGE-TURN & ZOOM)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-19" data-scene="19">
+      <div class="screen-box glass-card full-photo-album-box">
+        <div class="screen-badge">
+          <span>📖 Chapter 19 • The Official Photo Album</span>
+        </div>
+
+        <h1 class="album-cover-title">"THE CHAOTIC LIFE OF A CERTIFIED PEDA"</h1>
+        <p class="scene-subtitle">Turn the pages to relive the memories. Double-tap to zoom or use the magnifying glass!</p>
+
+        <!-- Flip Book Container -->
+        <div class="photo-album-book" id="photo-album-book">
+          <!-- Page 1 -->
+          <div class="album-page active" data-page="1">
+            <div class="photo-contain-wrapper">
+              <div class="photo-ambient-blur" style="background-image: url('assets/prerna-1.jpg');"></div>
+              <div class="photo-frame-pure">
+                <img src="assets/prerna-1.jpg" alt="Prerna Memory 1" class="personal-photo" loading="lazy">
+              </div>
+            </div>
+            <div class="album-caption-block">
+              <h2 class="album-caption-title handwriting">Chapter 1: Partners in Crime</h2>
+              <p class="album-caption-sub">"From childhood mischief to lifelong team."</p>
+            </div>
+          </div>
+
+          <!-- Page 2 -->
+          <div class="album-page" data-page="2" style="display: none;">
+            <div class="photo-contain-wrapper">
+              <div class="photo-ambient-blur" style="background-image: url('assets/prerna-2.jpg');"></div>
+              <div class="photo-frame-pure">
+                <img src="assets/prerna-2.jpg" alt="Prerna Memory 2" class="personal-photo" loading="lazy">
+              </div>
+            </div>
+            <div class="album-caption-block">
+              <h2 class="album-caption-title handwriting">Chapter 2: Professional Argument Specialist</h2>
+              <p class="album-caption-sub">"Can argue about anything, anytime, and win."</p>
+            </div>
+          </div>
+
+          <!-- Page 3 -->
+          <div class="album-page" data-page="3" style="display: none;">
+            <div class="photo-contain-wrapper">
+              <div class="photo-ambient-blur" style="background-image: url('assets/prerna-3.jpg');"></div>
+              <div class="photo-frame-pure">
+                <img src="assets/prerna-3.jpg" alt="Prerna Memory 3" class="personal-photo" loading="lazy">
+              </div>
+            </div>
+            <div class="album-caption-block">
+              <h2 class="album-caption-title handwriting">Chapter 3: Certified Nautanki</h2>
+              <p class="album-caption-sub">"Bollywood needs to take lessons from this drama queen."</p>
+            </div>
+          </div>
+
+          <!-- Page 4 -->
+          <div class="album-page" data-page="4" style="display: none;">
+            <div class="photo-contain-wrapper">
+              <div class="photo-ambient-blur" style="background-image: url('assets/prerna-4.jpg');"></div>
+              <div class="photo-frame-pure">
+                <img src="assets/prerna-4.jpg" alt="Prerna Memory 4" class="personal-photo" loading="lazy">
+              </div>
+            </div>
+            <div class="album-caption-block">
+              <h2 class="album-caption-title handwriting">Chapter 4: Candid Smiles</h2>
+              <p class="album-caption-sub">"The sweetest smile in the family."</p>
+            </div>
+          </div>
+
+          <!-- Page 5 -->
+          <div class="album-page" data-page="5" style="display: none;">
+            <div class="photo-contain-wrapper">
+              <div class="photo-ambient-blur" style="background-image: url('assets/prerna-5.jpg');"></div>
+              <div class="photo-frame-pure">
+                <img src="assets/prerna-5.jpg" alt="Prerna Memory 5" class="personal-photo" loading="lazy">
+              </div>
+            </div>
+            <div class="album-caption-block">
+              <h2 class="album-caption-title handwriting">Chapter 5: Unforgettable Journeys</h2>
+              <p class="album-caption-sub">"Growing up together has been the best adventure."</p>
+            </div>
+          </div>
+
+          <!-- Page 6 -->
+          <div class="album-page" data-page="6" style="display: none;">
+            <div class="photo-contain-wrapper">
+              <div class="photo-ambient-blur" style="background-image: url('assets/prerna-6.jpg');"></div>
+              <div class="photo-frame-pure">
+                <img src="assets/prerna-6.jpg" alt="Prerna Memory 6" class="personal-photo" loading="lazy">
+              </div>
+            </div>
+            <div class="album-caption-block">
+              <h2 class="album-caption-title handwriting">Chapter 6: Sibling Hug</h2>
+              <p class="album-caption-sub">"Always here for you, no matter what."</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Album Navigation Controls -->
+        <div class="album-nav-controls">
+          <button id="btn-album-prev" class="btn-secondary-pill">◀ Prev Page</button>
+          <span class="album-page-indicator" id="album-page-indicator">Page 1 of 6</span>
+          <button id="btn-album-next" class="btn-secondary-pill">Next Page ▶</button>
+        </div>
+
+        <div class="screen-action-wrap">
+          <button id="btn-album-finish" class="btn-primary-glow">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Sibling Cup Scoreboard ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 20: OFFICIAL SIBLING CUP SCOREBOARD
+         ==================================================================== -->
+    <section class="story-screen" id="scene-20" data-scene="20">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🏆 Chapter 20 • Championship Match</span>
+        </div>
+
+        <h1 class="scene-title">Official Sibling Cup</h1>
+        <p class="scene-subtitle">Live referee stats recorded from the household battlefield:</p>
+
+        <div class="scorecard-grid">
+          <div class="score-row">
+            <span class="score-metric">Dramatic Entrances</span>
+            <div class="score-values"><span class="prerna-score" id="cup-drama-pr">98</span> <span class="vs-label">vs</span> <span class="prakhar-score" id="cup-drama-p">12</span></div>
+          </div>
+          <div class="score-row">
+            <span class="score-metric">Stubbornness Level</span>
+            <div class="score-values"><span class="prerna-score" id="cup-stub-pr">99</span> <span class="vs-label">vs</span> <span class="prakhar-score" id="cup-stub-p">95</span></div>
+          </div>
+          <div class="score-row">
+            <span class="score-metric">Food Stolen from Bhai</span>
+            <div class="score-values"><span class="prerna-score" id="cup-food-pr">89%</span> <span class="vs-label">vs</span> <span class="prakhar-score" id="cup-food-p">11%</span></div>
+          </div>
+          <div class="score-row highlight-score-row">
+            <span class="score-metric">Caring for Each Other</span>
+            <div class="score-values"><span class="prerna-score">∞</span> <span class="vs-label">vs</span> <span class="prakhar-score">∞</span></div>
+          </div>
+        </div>
+
+        <div class="scorecard-verdict-box">
+          <h2 class="verdict-title">OFFICIAL WINNER: BOTH 🤝</h2>
+        </div>
+
+        <div class="screen-action-wrap">
+          <button id="btn-scene-20-next" class="btn-primary-glow">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Spin Nickname Machine ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 21: SISTER NICKNAME SLOT MACHINE (INTERACTIVE LEVER)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-21" data-scene="21">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🎰 Chapter 21 • Nickname Generator</span>
+        </div>
+
+        <h1 class="scene-title">The Sister Slot Machine</h1>
+        <p class="scene-subtitle">Pull the golden lever to generate your official sibling title!</p>
+
+        <!-- Slot Machine Unit with Lever -->
+        <div class="slot-machine-unit">
+          <div class="slot-machine-stage" id="slot-machine-stage">
+            <div class="slot-reel" id="reel-1"><span class="reel-val">MAHARANI</span></div>
+            <div class="slot-plus">+</div>
+            <div class="slot-reel" id="reel-2"><span class="reel-val">PEDA</span></div>
+            <div class="slot-plus">+</div>
+            <div class="slot-reel" id="reel-3"><span class="reel-val">DEVI</span></div>
+          </div>
+
+          <!-- Physical Lever -->
+          <div class="slot-lever-container" id="slot-lever-container">
+            <div class="slot-lever-arm" id="slot-lever-arm">
+              <div class="slot-lever-knob">🔴</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slot-spins-left">Spins Left: <strong id="slot-spins-count">3</strong></div>
+
+        <div class="screen-action-wrap">
+          <button id="btn-spin-slot" class="btn-grand-gold">
+            <span class="btn-shine"></span>
+            <span class="btn-content">🎰 PULL LEVER / SPIN 🎰</span>
+          </button>
+        </div>
+
+        <div class="slot-result-badge" id="slot-result-badge" style="display: none;">
+          <h2 class="slot-title handwriting" id="slot-result-title">MAHARANI PEDA DEVI</h2>
+          <p class="slot-sub">CEO, Department of Annoying Bhai</p>
+          <div class="screen-action-wrap">
+            <button id="btn-slot-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Tie Virtual Rakhi ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 22: VIRTUAL RAKHI THREAD TRACING PHYSICS
+         ==================================================================== -->
+    <section class="story-screen" id="scene-22" data-scene="22">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🏵️ Chapter 22 • The Sacred Thread</span>
+        </div>
+
+        <h1 class="scene-title">Tie The Sacred Rakhi</h1>
+        <p class="scene-subtitle">Trace your finger or mouse around the circular mandala to tie the sacred thread!</p>
+
+        <!-- Interactive Thread Circular Drag Stage -->
+        <div class="rakhi-drag-stage" id="rakhi-drag-stage">
+          <div class="rakhi-thread-svg-wrap">
+            <svg class="thread-svg" viewBox="0 0 200 200">
+              <circle class="thread-path-bg" cx="100" cy="100" r="80"></circle>
+              <circle class="thread-path-fill" id="thread-path-fill" cx="100" cy="100" r="80"></circle>
+            </svg>
+          </div>
+          <div class="rakhi-center-mandala" id="rakhi-center-mandala" title="Tap or Trace Rakhi">
+            <span>🏵️</span>
+          </div>
+        </div>
+
+        <div class="rakhi-trace-progress">
+          <span>Thread Traced: </span><strong id="thread-traced-percent">0%</strong>
+        </div>
+
+        <div class="screen-action-wrap" id="rakhi-tie-btn-wrap">
+          <button id="btn-tie-rakhi-action" class="btn-grand-gold">
+            <span class="btn-shine"></span>
+            <span class="btn-content">✨ Auto-Tie Sacred Rakhi ✨</span>
+          </button>
+        </div>
+
+        <div class="rakhi-complete-msg" id="rakhi-complete-msg" style="display: none;">
+          <div class="thread-connected-badge">BOND SECURED ❤️</div>
+          <h2 class="rakhi-quote handwriting">"A thread of love, laughter, and lifelong protection."</h2>
+          <div class="screen-action-wrap">
+            <button id="btn-rakhi-next" class="btn-primary-glow">
+              <span class="btn-shine"></span>
+              <span class="btn-content">Read Sister Shayari ➔</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 23: INTERACTIVE HINDI SHAYARI (LOTUS TOUCH DOTS)
+         ==================================================================== -->
+    <section class="story-screen dark-scene" id="scene-23" data-scene="23">
+      <div class="screen-box glass-card shayari-card">
+        <div class="screen-badge glow-badge">
+          <span>📜 Chapter 23 • Sister Shayari</span>
+        </div>
+
+        <div class="shayari-lotus-wrap" id="shayari-mandala-egg" title="Tap the Lotus">
+          <span>🪷</span>
+        </div>
+
+        <p class="scene-subtitle" style="color: #FCE7F3;">Tap on the glowing dots to reveal each line of poetry:</p>
+
+        <!-- Interactive Shayari Dots -->
+        <div class="shayari-dots-row">
+          <button class="shayari-dot-btn active" data-sline="1">● 1</button>
+          <button class="shayari-dot-btn" data-sline="2">● 2</button>
+          <button class="shayari-dot-btn" data-sline="3">● 3</button>
+          <button class="shayari-dot-btn" data-sline="4">● 4</button>
+        </div>
+
+        <div class="shayari-lines-container">
+          <p class="shayari-line devanagari-font" id="sh-line-1">"रिश्ते कई मिले इस दुनिया में..."</p>
+          <p class="shayari-line devanagari-font" id="sh-line-2">"कुछ वक्त के साथ बदल गए..."</p>
+          <p class="shayari-line devanagari-font" id="sh-line-3">"कुछ दूर होकर भी पास रहे..."</p>
+          <p class="shayari-line devanagari-font highlight-shayari" id="sh-line-4">"लेकिन बहन का रिश्ता दिल में हमेशा वहीं रहता है।"</p>
+        </div>
+
+        <div class="easter-egg-toast" id="easter-egg-2-toast" style="display: none;">
+          <span>🎉 SECRET UNLOCKED: +100 Bhena Points!</span>
+        </div>
+
+        <div class="screen-action-wrap" id="shayari-action-wrap" style="display: none;">
+          <button id="btn-scene-23-next" class="btn-primary-glow">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Open Secret Drawer ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 24: SECRET WOODEN DRAWER (PHYSICAL DOWNWARD DRAG)
+         ==================================================================== -->
+    <section class="story-screen" id="scene-24" data-scene="24">
+      <div class="screen-box glass-card">
+        <div class="screen-badge warning-badge">
+          <span>🔒 Chapter 24 • Classified Drawer</span>
+        </div>
+
+        <h1 class="scene-title">The Secret Sibling Drawer</h1>
+        <p class="scene-subtitle">Drag the wooden drawer handle downwards to unlock classified secrets!</p>
+
+        <!-- Pullable Physical Wooden Drawer -->
+        <div class="drawer-cabinet-stage">
+          <div class="drawer-box" id="drawer-pullable">
+            <div class="drawer-handle-ring" id="drawer-handle-ring">
+              <span class="handle-icon">▼</span>
+              <span class="handle-text">PULL DOWN</span>
+              <span class="handle-icon">▼</span>
+            </div>
+            <div class="drawer-label">TOP SECRET • PRAKHAR'S VAULT</div>
+          </div>
+
+          <div class="drawer-secret-note" id="drawer-secret-note" style="display: none;">
+            <h3 class="note-header handwriting">THINGS PRAKHAR WILL NEVER ADMIT:</h3>
+            <ul class="note-list handwriting">
+              <li>1. You're actually sometimes right.</li>
+              <li>2. I do worry about you when you're away.</li>
+              <li>3. You're genuinely fun to hang out with.</li>
+              <li>4. Life without your bakbak would be terribly boring.</li>
+              <li>5. You're one of the most important people in my life.</li>
+            </ul>
+            <p class="note-footer handwriting">— Don't show Mom. 🤫</p>
+          </div>
+        </div>
+
+        <div class="screen-action-wrap">
+          <button id="btn-open-drawer" class="btn-grand-gold">
+            <span class="btn-shine"></span>
+            <span class="btn-content">🔓 Pull Down Drawer Handle 🔓</span>
+          </button>
+          <button id="btn-drawer-next" class="btn-primary-glow" style="display: none;">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Assemble Message Puzzle ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 25: EMOTIONAL MESSAGE 4-PIECE MAGNETIC ASSEMBLY PUZZLE
+         ==================================================================== -->
+    <section class="story-screen" id="scene-25" data-scene="25">
+      <div class="screen-box glass-card">
+        <div class="screen-badge">
+          <span>🧩 Chapter 25 • Heartfelt Words</span>
+        </div>
+
+        <h1 class="scene-title">Assemble The Message</h1>
+        <p class="scene-subtitle">Tap each message piece in order to assemble Bhai's heartfelt words:</p>
+
+        <!-- 4 Magnetic Message Fragments -->
+        <div class="message-puzzle-pieces" id="message-puzzle-pieces">
+          <button class="msg-piece-btn" data-piece="1">"You're not just my sister..."</button>
+          <button class="msg-piece-btn" data-piece="2">"You're part of my childhood..."</button>
+          <button class="msg-piece-btn" data-piece="3">"My happiest memories..."</button>
+          <button class="msg-piece-btn" data-piece="4">"And my life. Happy Rakhi, Bhena. ❤️"</button>
+        </div>
+
+        <!-- Assembled Message Target Card -->
+        <div class="assembled-message-target" id="assembled-message-target">
+          <p class="assembled-placeholder">Tap the pieces above in sequence...</p>
+        </div>
+
+        <div class="screen-action-wrap" id="msg-puzzle-next-wrap" style="display: none;">
+          <button id="btn-msg-puzzle-next" class="btn-primary-glow">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Read Handwritten Letter ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 26: 3D HANDWRITTEN LETTER & 10-YEAR TIME CAPSULE
+         ==================================================================== -->
+    <section class="story-screen" id="scene-26" data-scene="26">
+      <div class="screen-box glass-card" style="max-width: 680px;">
+        <div class="screen-badge">
+          <span>💌 Chapter 26 • A Letter From Prakhar</span>
+        </div>
+
+        <h1 class="scene-title">A Letter For Prerna</h1>
+        <p class="scene-subtitle">Tap the wax seal to slide out the letter:</p>
+
+        <!-- 3D Letter Envelope -->
+        <div class="envelope-stage">
+          <div class="envelope" id="story-envelope">
+            <div class="envelope-back"></div>
+            <div class="letter-paper" id="story-letter-paper">
+              <div class="letter-stamp-top">🌸</div>
+              <h2 class="letter-salutation handwriting">Dear Peda,</h2>
+              <div class="letter-content-body handwriting">
+                <p>23 years ago, my life became infinitely more chaotic, infinitely louder, and infinitely better.</p>
+                <p>We've fought over the TV remote, stolen each other's food, argued over completely pointless things, and pretended to hate each other for 10 minutes at a time.</p>
+                <p>No matter how old we get or where life takes us, <strong class="bold-highlight">you will always have your brother standing right beside you.</strong></p>
+              </div>
+              <div class="letter-sign-off handwriting">
+                <p>Always in your corner,</p>
+                <p class="sign-name" id="brother-sig">Prakhar ❤️</p>
+              </div>
+
+              <!-- Margin Notes -->
+              <span class="margin-note m-n-1">Peda forever!</span>
+              <span class="margin-note m-n-2">No refunds on this brother.</span>
+            </div>
+            <div class="env-flap-left"></div>
+            <div class="env-flap-right"></div>
+            <div class="env-flap-bottom"></div>
+            <div class="env-flap-top"></div>
+            <div class="env-wax-seal" id="env-wax-seal" title="Break Seal">
+              <div class="seal-inner-circle">P</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="screen-action-wrap">
+          <button id="btn-open-letter-trigger" class="btn-grand-gold">
+            <span class="btn-shine"></span>
+            <span class="btn-content">💌 Break Seal & Slide Letter 💌</span>
+          </button>
+          <button id="btn-scene-26-next" class="btn-primary-glow" style="display: none;">
+            <span class="btn-shine"></span>
+            <span class="btn-content">Proceed to Grand Finale ➔</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SCENE 27: FINAL SUSPENSE & GRAND FINALE CELEBRATION
+         ==================================================================== -->
+    <section class="story-screen" id="scene-27" data-scene="27">
+      <div class="screen-box glass-card grand-celebration-card" id="grand-celebration-card">
+        <div class="grand-crown-badge">👑 MAHARANI PEDA DEVI'S GRAND CELEBRATION 👑</div>
+
+        <!-- Sibling Bond Score Gauge -->
+        <div class="sibling-bond-score-box">
+          <span class="bond-score-label">SIBLING BOND SCORE:</span>
+          <span class="bond-score-val" id="bond-score-val">98%</span>
+          <p class="bond-score-sub">"Only 2% missing probably because you still owe me food. 🍕"</p>
+        </div>
+
+        <!-- Custom Audio Player Widget -->
+        <div class="music-player-widget">
+          <div class="music-info-row">
+            <span class="music-note-icon">♫</span>
+            <span class="music-title-text" id="music-status-text">Playing: Ek Hazaaron Mein Meri Behna Hai</span>
+          </div>
+          <div class="music-controls-row">
+            <button id="btn-audio-play-pause" class="player-btn" title="Play / Pause">❚❚</button>
+            <input type="range" id="audio-volume-slider" class="volume-slider" min="0" max="1" step="0.05" value="0.85" title="Volume">
+            <button id="btn-audio-mute" class="player-btn" title="Mute">🔊</button>
+          </div>
+        </div>
+
+        <!-- 100% UNTOUCHED, UNCONTAINED & FULL PERSONAL TOGETHER PHOTO -->
+        <div class="photo-contain-wrapper gold-border-frame" id="together-photo-wrapper">
+          <div class="photo-ambient-blur" style="background-image: url('assets/prerna-together.jpg');"></div>
+          <div class="photo-frame-pure">
+            <img src="assets/prerna-together.jpg" alt="Prerna & Prakhar Together" id="together-photo-img" class="personal-photo" loading="lazy">
+          </div>
+        </div>
+
+        <!-- Grand Celebration Headings -->
+        <h1 class="grand-festive-title">HAPPY RAKSHA BANDHAN!</h1>
+        <h2 class="grand-sister-name handwriting">Prerna (Peda) ❤️</h2>
+        <p class="grand-milestone-tag">"23 Years. Countless Memories. One Irreplaceable Sister."</p>
+
+        <p class="grand-emotional-message">"No matter how old we get or where life takes us, you will always be my favorite sister."</p>
+        <p class="grand-love-note handwriting">Love you always, Bhena! 🌸</p>
+        <p class="grand-sign-text handwriting">— Your annoying brother, Prakhar ✨</p>
+
+        <!-- Interactive Celebration Actions -->
+        <div class="grand-actions-bar">
+          <button id="btn-cannon-more" class="btn-primary-glow">
+            <span class="btn-shine"></span>
+            <span class="btn-content">🎉 Fire Confetti Cannon</span>
+          </button>
+
+          <button id="btn-diya-bless" class="btn-grand-gold">
+            <span class="btn-shine"></span>
+            <span class="btn-content">🪔 Light Festive Diya</span>
+          </button>
+
+          <button id="btn-download-keepsake" class="btn-secondary-pill">
+            <span>📥 Download Keepsake Card</span>
+          </button>
+        </div>
+
+        <div class="blessing-toast-box" id="blessing-toast-box" style="display: none;">
+          <span class="toast-diya-flame">🪔</span>
+          <span class="toast-text handwriting">"May your year be filled with happiness, success, good food, and 0 arguments with Bhai!"</span>
+        </div>
+
+        <!-- Easter Egg Toasts -->
+        <div class="easter-egg-toast" id="easter-egg-1-toast" style="display: none;">
+          <span>🎉 "I literally told you not to touch it! +10 Sibling Chaos Points!"</span>
+        </div>
+        <div class="easter-egg-toast" id="easter-egg-4-toast" style="display: none;">
+          <span>👑 "P detected. Obviously this website belongs to the Peda."</span>
+        </div>
+        <div class="easter-egg-toast" id="easter-egg-5-toast" style="display: none;">
+          <span>🛠️ "Yes, I made all of this instead of doing something productive."</span>
+        </div>
+
+        <!-- Replay from beginning button -->
+        <div class="replay-wrap">
+          <button id="btn-replay-story" class="replay-link-btn">
+            <span>↺ Relive the entire interactive story from the beginning</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Transparent Privacy Notice -->
+  <footer class="privacy-notice-bar" aria-label="Privacy Note">
+    <p>Your answers & milestone achievements in this interactive surprise are saved so your brother can see them later ❤️</p>
+  </footer>
+
+  <!-- Script -->
+  <script src="script.js"></script>
+</body>
+</html>

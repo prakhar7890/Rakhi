@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad-3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFEDD5"/>
+      <stop offset="50%" stop-color="#FED7AA"/>
+      <stop offset="100%" stop-color="#FB923C"/>
+    </linearGradient>
+    <linearGradient id="bubble-grad-3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.85"/>
+      <stop offset="100%" stop-color="#FFEDD5" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  
+  <rect width="600" height="600" fill="url(#bg-grad-3)" rx="24"/>
+  
+  <circle cx="130" cy="110" r="75" fill="url(#bubble-grad-3)" />
+  <circle cx="490" cy="490" r="115" fill="url(#bubble-grad-3)" />
+  <circle cx="510" cy="110" r="35" fill="#FFFFFF" opacity="0.3" />
+
+  <!-- Center Card Illustration -->
+  <g transform="translate(150, 120)">
+    <rect width="300" height="300" rx="30" fill="#FFFFFF" opacity="0.92" filter="drop-shadow(0 15px 25px rgba(251, 146, 60, 0.2))"/>
+    
+    <text x="150" y="140" font-size="70" text-anchor="middle">😇🪄👑</text>
+    <text x="150" y="210" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="18" fill="#7C2D12" text-anchor="middle">THE INNOCENT SISTER</text>
+    <text x="150" y="245" font-family="'Caveat', cursive" font-weight="700" font-size="26" fill="#EA580C" text-anchor="middle">"It wasn't me, I swear!"</text>
+  </g>
+
+  <!-- Cute Stamp / Tape -->
+  <rect x="250" y="95" width="100" height="30" rx="4" fill="#FBCFE8" opacity="0.9" transform="rotate(-2 300 110)"/>
+  
+  <text x="300" y="520" font-family="'Plus Jakarta Sans', sans-serif" font-size="16" font-weight="600" fill="#FFFFFF" text-anchor="middle" letter-spacing="1.5">MOM BELIEVES HER EVERY TIME</text>
+</svg>

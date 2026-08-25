@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prakhar's Admin Dashboard • Prerna's Rakhi Journey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0F0811;
+      --card-bg: #1B0E1E;
+      --accent: #E11D48;
+      --gold: #F59E0B;
+      --text: #F8FAFC;
+      --text-muted: #94A3B8;
+      --border: #331A38;
+      --green: #10B981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      padding: 24px;
+    }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    .header h1 { font-family: 'Outfit', sans-serif; font-size: 1.6rem; color: var(--gold); }
+    .btn { background: var(--accent); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn:hover { background: #BE123C; }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    .stat-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 20px; text-align: center; }
+    .stat-val { font-size: 2.2rem; font-weight: 700; color: var(--gold); margin-bottom: 4px; font-family: 'Outfit', sans-serif; }
+    .stat-lbl { font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+    .panel { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 24px; margin-bottom: 24px; }
+    .panel h2 { font-size: 1.25rem; margin-bottom: 16px; color: var(--text); }
+    table { width: 100%; border-collapse: collapse; text-align: left; }
+    th, td { padding: 12px 14px; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    th { color: var(--text-muted); font-weight: 600; }
+    .badge { padding: 4px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 700; }
+    .badge-success { background: rgba(16, 185, 129, 0.2); color: var(--green); }
+    .badge-pending { background: rgba(245, 158, 11, 0.2); color: var(--gold); }
+    .clickable-row { cursor: pointer; transition: background 0.15s; }
+    .clickable-row:hover { background: rgba(225, 29, 72, 0.08); }
+    .login-box { max-width: 380px; margin: 80px auto; background: var(--card-bg); border: 1px solid var(--border); padding: 32px; border-radius: 16px; text-align: center; }
+    .login-input { width: 100%; padding: 12px 16px; background: #0B040B; border: 1px solid var(--border); border-radius: 8px; color: #fff; margin: 16px 0; font-size: 1rem; }
+    .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+    .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 18px; width: min(100%, 750px); max-height: 85vh; overflow-y: auto; padding: 28px; position: relative; }
+    .close-btn { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--text-muted); font-size: 1.4rem; cursor: pointer; }
+    .qa-card { background: #120714; border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; margin-bottom: 12px; }
+    .qa-q { font-weight: 700; color: var(--gold); font-size: 0.95rem; margin-bottom: 4px; }
+    .qa-a { font-size: 1.05rem; color: #fff; }
+    .qa-time { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; text-align: right; }
+  </style>
+</head>
+<body>
+
+  <div id="login-section" class="login-box">
+    <h2 style="color: var(--gold); margin-bottom: 8px;">🔐 Brother's Portal</h2>
+    <p style="color: var(--text-muted); font-size: 0.9rem;">Enter admin password to view Prerna's journey:</p>
+    <input type="password" id="admin-pass" class="login-input" placeholder="Admin password (default: peda2026)">
+    <button id="btn-login" class="btn" style="width: 100%;">Unlock Dashboard</button>
+    <p id="login-error" style="color: #F87171; font-size: 0.85rem; margin-top: 12px; display: none;">Invalid password!</p>
+  </div>
+
+  <div id="dashboard-section" class="container" style="display: none;">
+    <div class="header">
+      <div>
+        <h1>🌸 Prerna's Rakhi Journey • Live Insights</h1>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Monitored live from FastAPI Backend</p>
+      </div>
+      <div>
+        <button id="btn-refresh" class="btn" style="background: #334155; margin-right: 8px;">Refresh</button>
+        <button id="btn-logout" class="btn">Logout</button>
+      </div>
+    </div>
+
+    <!-- Stats Summary Cards -->
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-val" id="stat-visitors">0</div><div class="stat-lbl">Total Visitors</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-completed" style="color: var(--green);">0</div><div class="stat-lbl">Completed</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-progress">0</div><div class="stat-lbl">In Progress</div></div>
+      <div class="stat-card"><div class="stat-val" id="stat-answers">0</div><div class="stat-lbl">Total Milestones & Answers</div></div>
+    </div>
+
+    <!-- Sessions List -->
+    <div class="panel">
+      <h2>Prerna's Interactive Sessions</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Session ID</th>
+            <th>Started At</th>
+            <th>Status</th>
+            <th>Milestones & Answers</th>
+            <th>Completed At</th>
+          </tr>
+        </thead>
+        <tbody id="sessions-tbody">
+          <tr><td colspan="5" style="text-align: center; color: var(--text-muted);">Loading sessions...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Session Detail Modal -->
+  <div id="detail-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <button class="close-btn" id="btn-close-modal">✕</button>
+      <h2 id="modal-title" style="color: var(--gold); margin-bottom: 4px;">Session Details</h2>
+      <p id="modal-sub" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 20px;">Detailed Q&A & Milestone Timeline:</p>
+      <div id="qa-container"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
+      ? 'http://127.0.0.1:8000'
+      : '';
+
+    let authToken = sessionStorage.getItem('admin_token');
+
+    const loginSection = document.getElementById('login-section');
+    const dashboardSection = document.getElementById('dashboard-section');
+    const btnLogin = document.getElementById('btn-login');
+    const adminPassInput = document.getElementById('admin-pass');
+    const loginError = document.getElementById('login-error');
+    const btnLogout = document.getElementById('btn-logout');
+    const btnRefresh = document.getElementById('btn-refresh');
+    const detailModal = document.getElementById('detail-modal');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+
+    async function checkAuthAndLoad() {
+      if (authToken) {
+        loginSection.style.display = 'none';
+        dashboardSection.style.display = 'block';
+        loadDashboardData();
+      } else {
+        loginSection.style.display = 'block';
+        dashboardSection.style.display = 'none';
+      }
+    }
+
+    async function handleLogin() {
+      const pass = adminPassInput.value.trim();
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: pass })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          authToken = data.token || 'admin-session-authenticated';
+          sessionStorage.setItem('admin_token', authToken);
+          loginError.style.display = 'none';
+          checkAuthAndLoad();
+        } else {
+          loginError.style.display = 'block';
+        }
+      } catch (e) {
+        loginError.textContent = "Cannot connect to backend server. Make sure backend is running!";
+        loginError.style.display = 'block';
+      }
+    }
+
+    async function loadDashboardData() {
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/sessions`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (!res.ok) {
+          if (res.status === 401) {
+            authToken = null;
+            sessionStorage.removeItem('admin_token');
+            checkAuthAndLoad();
+          }
+          return;
+        }
+        const data = await res.json();
+
+        document.getElementById('stat-visitors').textContent = data.stats.total_visitors;
+        document.getElementById('stat-completed').textContent = data.stats.completed;
+        document.getElementById('stat-progress').textContent = data.stats.in_progress;
+        document.getElementById('stat-answers').textContent = data.stats.total_answers;
+
+        const tbody = document.getElementById('sessions-tbody');
+        tbody.innerHTML = '';
+        if (data.sessions.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted);">No sessions recorded yet. Waiting for Prerna to open the site!</td></tr>';
+          return;
+        }
+
+        data.sessions.forEach(s => {
+          const tr = document.createElement('tr');
+          tr.className = 'clickable-row';
+          const startTime = new Date(s.started_at).toLocaleString();
+          const completeTime = s.completed_at ? new Date(s.completed_at).toLocaleString() : '—';
+          const statusBadge = s.is_completed
+            ? '<span class="badge badge-success">Completed ✨</span>'
+            : '<span class="badge badge-pending">In Progress ⏳</span>';
+
+          tr.innerHTML = `
+            <td><strong>${s.id.substring(0, 12)}...</strong></td>
+            <td>${startTime}</td>
+            <td>${statusBadge}</td>
+            <td><strong>${s.answers_count}</strong> items</td>
+            <td>${completeTime}</td>
+          `;
+          tr.onclick = () => openSessionDetail(s.id);
+          tbody.appendChild(tr);
+        });
+
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    async function openSessionDetail(sessionId) {
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/session/${sessionId}`, {
+          headers: { 'Authorization': `Bearer ${authToken}` }
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+
+        document.getElementById('modal-title').textContent = `Session: ${sessionId}`;
+        document.getElementById('modal-sub').textContent = `Started: ${new Date(data.started_at).toLocaleString()} | Status: ${data.is_completed ? 'Completed' : 'In Progress'}`;
+
+        const container = document.getElementById('qa-container');
+        container.innerHTML = '';
+        if (data.answers.length === 0) {
+          container.innerHTML = '<p style="color: var(--text-muted);">No milestones/answers submitted in this session yet.</p>';
+        } else {
+          data.answers.forEach(a => {
+            const card = document.createElement('div');
+            card.className = 'qa-card';
+            card.innerHTML = `
+              <div class="qa-q">${a.question_text}</div>
+              <div class="qa-a">"${a.answer}"</div>
+              <div class="qa-time">${new Date(a.created_at).toLocaleTimeString()}</div>
+            `;
+            container.appendChild(card);
+          });
+        }
+        detailModal.style.display = 'flex';
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    btnLogin.onclick = handleLogin;
+    adminPassInput.onkeydown = (e) => { if (e.key === 'Enter') handleLogin(); };
+    btnLogout.onclick = () => {
+      authToken = null;
+      sessionStorage.removeItem('admin_token');
+      checkAuthAndLoad();
+    };
+    btnRefresh.onclick = loadDashboardData;
+    btnCloseModal.onclick = () => { detailModal.style.display = 'none'; };
+    window.onclick = (e) => { if (e.target === detailModal) detailModal.style.display = 'none'; };
+
+    checkAuthAndLoad();
+  </script>
+</body>
+</html>
