@@ -1075,7 +1075,7 @@ body::before {
 .brush-color-btn.active { transform: scale(1.2); outline: 2px solid #F59E0B; }
 .drawing-success-text { font-size: 1.35rem; color: var(--color-pink-deep); font-weight: 700; }
 
-/* --- 20. SCENE 13 & 14: HEART GAUGE & HOLD REVEAL --- */
+/* --- 20. SCENE 13 & 14: HEART GAUGE & SIBLING TRUTH SCANNER --- */
 .heart-gauge-container { margin: 20px auto; max-width: 320px; text-align: center; }
 .giant-beating-heart { position: relative; font-size: 5rem; margin-bottom: 12px; display: inline-block; cursor: pointer; }
 .heart-meter-track { width: 100%; height: 14px; background: rgba(225, 29, 72, 0.12); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
@@ -1084,15 +1084,94 @@ body::before {
 .heart-maxed-title { font-size: 1.8rem; color: var(--color-pink-deep); }
 .heart-maxed-sub { font-size: 1.05rem; color: var(--color-rose-dark); }
 
-/* Hold Ring Button */
-.hold-button-stage { margin: 24px auto; width: 130px; height: 130px; position: relative; display: flex; align-items: center; justify-content: center; }
-.hold-svg-ring-wrap { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
-.hold-svg-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-.ring-bg { fill: none; stroke: rgba(255, 255, 255, 0.15); stroke-width: 8; }
-.ring-fill { fill: none; stroke: #F59E0B; stroke-width: 8; stroke-dasharray: 339.292; stroke-dashoffset: 339.292; transition: stroke-dashoffset 0.05s linear; }
-.hold-action-btn { width: 92px; height: 92px; border-radius: 50%; background: linear-gradient(135deg, #E11D48 0%, #9F1239 100%); border: 2px solid #FDE68A; color: #FFFFFF; font-weight: 800; font-size: 1.1rem; cursor: pointer; user-select: none; touch-action: none; }
-.hold-action-btn:active { transform: scale(0.95); }
-.hold-status-hint { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); width: 220px; font-size: 0.82rem; color: #FCE7F3; }
+/* Biometric Sibling Truth Scanner */
+.truth-scanner-stage {
+  margin: 20px auto;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.biometric-scanner-pad {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 28px;
+  background: radial-gradient(circle, #2D0D1E 0%, #15050F 100%);
+  border: 2.5px solid #F59E0B;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.4), inset 0 0 15px rgba(245, 158, 11, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.biometric-scanner-pad:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 35px rgba(245, 158, 11, 0.6);
+}
+
+.biometric-scanner-pad:active {
+  transform: scale(0.96);
+}
+
+.scanner-laser-sweep {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #34D399;
+  box-shadow: 0 0 16px #34D399;
+  animation: laser-sweep 1.2s infinite ease-in-out;
+  z-index: 5;
+}
+
+.biometric-scanner-pad.scanning .scanner-laser-sweep {
+  display: block;
+}
+
+.scanner-thumb-icon {
+  font-size: 3rem;
+  margin-bottom: 4px;
+  animation: pulse-subtle 2s infinite ease-in-out;
+}
+
+.scanner-hint-text {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #FDE68A;
+  letter-spacing: 0.8px;
+}
+
+.scanner-live-diagnostic {
+  background: rgba(18, 7, 14, 0.95);
+  border: 1.5px solid rgba(245, 158, 11, 0.35);
+  border-radius: 14px;
+  padding: 14px 18px;
+  width: 100%;
+  text-align: left;
+  font-family: monospace;
+  font-size: 0.92rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.diagnostic-line {
+  margin-bottom: 6px;
+  color: #E2E8F0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.diagnostic-line:last-child {
+  margin-bottom: 0;
+}
+
 .hold-revealed-p1 { font-size: 1.6rem; color: #FDE68A; font-weight: 700; margin-bottom: 6px; }
 .hold-revealed-p2 { font-size: 1.8rem; color: #F472B6; font-weight: 800; }
 

@@ -10,6 +10,10 @@ class AnswerCreate(BaseModel):
     answer: str
     timestamp: Optional[str] = None
 
+class MilestoneCreate(BaseModel):
+    session_id: str
+    milestone: str
+
 class CompleteSession(BaseModel):
     session_id: str
     completed_at: Optional[str] = None
@@ -25,7 +29,13 @@ class AnswerOut(BaseModel):
 
     class Config:
         from_attributes = True
-        orm_mode = True
+
+class MilestoneOut(BaseModel):
+    milestone: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
 
 class SessionOut(BaseModel):
     id: str
@@ -33,10 +43,10 @@ class SessionOut(BaseModel):
     is_completed: bool
     completed_at: Optional[datetime] = None
     answers_count: int = 0
+    milestones_count: int = 0
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 class SessionDetailOut(BaseModel):
     id: str
@@ -44,7 +54,7 @@ class SessionDetailOut(BaseModel):
     is_completed: bool
     completed_at: Optional[datetime] = None
     answers: List[AnswerOut] = []
+    milestones: List[MilestoneOut] = []
 
     class Config:
         from_attributes = True
-        orm_mode = True

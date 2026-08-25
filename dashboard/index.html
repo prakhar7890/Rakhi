@@ -232,9 +232,35 @@
 
         const container = document.getElementById('qa-container');
         container.innerHTML = '';
+
+        if (data.milestones && data.milestones.length > 0) {
+          const mWrap = document.createElement('div');
+          mWrap.style.marginBottom = '18px';
+          mWrap.innerHTML = '<h3 style="color: var(--gold); font-size: 0.95rem; margin-bottom: 8px;">🚩 Reached Milestones:</h3>';
+          const mList = document.createElement('div');
+          mList.style.display = 'flex';
+          mList.style.flexWrap = 'wrap';
+          mList.style.gap = '6px';
+          data.milestones.forEach(m => {
+            const mBadge = document.createElement('span');
+            mBadge.className = 'badge badge-success';
+            mBadge.textContent = '✨ ' + m.milestone.replace(/_/g, ' ');
+            mList.appendChild(mBadge);
+          });
+          mWrap.appendChild(mList);
+          container.appendChild(mWrap);
+        }
+
         if (data.answers.length === 0) {
-          container.innerHTML = '<p style="color: var(--text-muted);">No milestones/answers submitted in this session yet.</p>';
+          container.innerHTML += '<p style="color: var(--text-muted);">No answers submitted in this session yet.</p>';
         } else {
+          const qHeader = document.createElement('h3');
+          qHeader.style.color = 'var(--gold)';
+          qHeader.style.fontSize = '0.95rem';
+          qHeader.style.marginBottom = '8px';
+          qHeader.textContent = '📝 Q&A Responses:';
+          container.appendChild(qHeader);
+
           data.answers.forEach(a => {
             const card = document.createElement('div');
             card.className = 'qa-card';

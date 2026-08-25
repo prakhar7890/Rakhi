@@ -6,6 +6,20 @@
 (function () {
   'use strict';
 
+  // ==========================================================================
+  // 0. API CONFIGURATION
+  // ==========================================================================
+  // In local development (localhost / 127.0.0.1), requests automatically route to
+  // http://localhost:8000.
+  // In production on Vercel, replace "https://YOUR-RENDER-BACKEND.onrender.com" below
+  // with your actual live Render Web Service URL!
+  // ==========================================================================
+  const API_CONFIG = {
+    BASE_URL: (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+      ? "http://localhost:8000"
+      : "https://YOUR-RENDER-BACKEND.onrender.com" // <-- Replace with your Render URL
+  };
+
   const TOTAL_SCREENS = 27;
   let currentScreen = 1;
   let isTransitioning = false;
@@ -549,9 +563,7 @@
   // 5. ANSWER & MILESTONE MANAGER (FastAPI Backend + Offline Queue)
   // ==========================================================================
   const AnswerManager = (function () {
-    const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-      ? 'http://127.0.0.1:8000'
-      : '';
+    const API_BASE = API_CONFIG.BASE_URL;
 
     let sessionId = sessionStorage.getItem('rakhi_session_id');
     if (!sessionId) {
@@ -563,26 +575,32 @@
 
     function getOfflineQueue() {
       try {
-        const item = localStorage.getItem('rakhi_offline_answers');
+        const item = localStorage.getItem('rakhi_offline_queue');
         return item ? JSON.parse(item) : [];
       } catch (e) { return []; }
     }
 
     function saveOfflineQueue(queue) {
-      try { localStorage.setItem('rakhi_offline_answers', JSON.stringify(queue)); } catch (e) {}
+      try { localStorage.setItem('rakhi_offline_queue', JSON.stringify(queue)); } catch (e) {}
     }
 
     async function sendPayload(endpoint, data) {
-      if (!API_BASE && !window.location.origin.startsWith('http')) return false;
+      if (!API_BASE || API_BASE.includes('YOUR-RENDER-BACKEND')) return false;
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
         const res = await fetch(`${API_BASE}${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
-          mode: 'cors'
+          mode: 'cors',
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
         return res.ok;
-      } catch (e) { return false; }
+      } catch (e) {
+        return false;
+      }
     }
 
     async function recordAnswer(questionId, questionText, answerText) {
@@ -596,15 +614,26 @@
       const success = await sendPayload('/api/answer', payload);
       if (!success) {
         const queue = getOfflineQueue();
-        if (!queue.some(item => item.question_id === payload.question_id)) {
-          queue.push(payload);
+        if (!queue.some(item => item.type === 'answer' && item.payload.question_id === payload.question_id)) {
+          queue.push({ type: 'answer', endpoint: '/api/answer', payload });
           saveOfflineQueue(queue);
         }
       }
     }
 
-    async function recordMilestone(milestoneId, milestoneName) {
-      await recordAnswer(`milestone_${milestoneId}`, 'Milestone Reached', milestoneName);
+    async function recordMilestone(milestoneName) {
+      const payload = {
+        session_id: sessionId,
+        milestone: String(milestoneName)
+      };
+      const success = await sendPayload('/api/milestone', payload);
+      if (!success) {
+        const queue = getOfflineQueue();
+        if (!queue.some(item => item.type === 'milestone' && item.payload.milestone === payload.milestone)) {
+          queue.push({ type: 'milestone', endpoint: '/api/milestone', payload });
+          saveOfflineQueue(queue);
+        }
+      }
     }
 
     async function recordCompletion() {
@@ -612,7 +641,7 @@
       const success = await sendPayload('/api/complete', payload);
       if (!success) {
         const queue = getOfflineQueue();
-        queue.push({ ...payload, is_completion: true });
+        queue.push({ type: 'complete', endpoint: '/api/complete', payload });
         saveOfflineQueue(queue);
       }
     }
@@ -622,16 +651,14 @@
       if (queue.length === 0) return;
       const remaining = [];
       for (const item of queue) {
-        const ok = item.is_completion
-          ? await sendPayload('/api/complete', item)
-          : await sendPayload('/api/answer', item);
+        const ok = await sendPayload(item.endpoint, item.payload);
         if (!ok) remaining.push(item);
       }
       saveOfflineQueue(remaining);
     }
 
     window.addEventListener('online', retryOfflineQueue);
-    setInterval(retryOfflineQueue, 20000);
+    setInterval(retryOfflineQueue, 15000);
 
     return { getSessionId: () => sessionId, recordAnswer, recordMilestone, recordCompletion };
   })();
@@ -1473,53 +1500,42 @@
     if (btnNext) btnNext.onclick = () => StoryRouter.goToScreen(14, 'next');
   }
 
-  // --- Scene 14: Hold-to-Reveal 3s Mystery ---
+  // --- Scene 14: Sibling Lie Detector & Truth Scanner ---
   function setupScene14() {
-    const holdBtn = document.getElementById('btn-hold-action');
-    const ringFill = document.getElementById('hold-ring-fill');
-    const hint = document.getElementById('hold-status-hint');
-    const stage = document.getElementById('hold-button-stage');
-    const card = document.getElementById('hold-revealed-card');
+    const scanBtn = document.getElementById('btn-scan-truth');
+    const diagBox = document.getElementById('scanner-live-diagnostic');
+    const diag2 = document.getElementById('diag-2');
+    const diag3 = document.getElementById('diag-3');
+    const revealedCard = document.getElementById('hold-revealed-card');
     const btnNext = document.getElementById('btn-hold-next');
+    let isScanned = false;
 
-    let holdTimer = null;
-    let holdProgress = 0;
-    let isRevealed = false;
+    if (scanBtn) {
+      scanBtn.onclick = () => {
+        if (isScanned) return;
+        isScanned = true;
+        scanBtn.classList.add('scanning');
+        AudioManager.playPop();
+        if (diagBox) diagBox.style.display = 'block';
 
-    function startHold() {
-      if (isRevealed) return;
-      holdProgress = 0;
-      if (hint) hint.textContent = "Holding...";
+        setTimeout(() => {
+          AudioManager.playBell();
+          if (diag2) { diag2.style.opacity = '1'; }
+        }, 700);
 
-      holdTimer = setInterval(() => {
-        holdProgress += 2;
-        const offset = 339.292 - (339.292 * (holdProgress / 100));
-        if (ringFill) ringFill.style.strokeDashoffset = offset;
+        setTimeout(() => {
+          AudioManager.playBell();
+          if (diag3) { diag3.style.opacity = '1'; }
+        }, 1400);
 
-        if (holdProgress >= 100) {
-          clearInterval(holdTimer);
-          isRevealed = true;
+        setTimeout(() => {
+          scanBtn.classList.remove('scanning');
           AudioManager.playFanfare();
           ParticleManager.fireConfetti(window.innerWidth / 2, window.innerHeight * 0.45, 45);
-          if (stage) stage.style.display = 'none';
-          if (card) card.style.display = 'block';
-          AnswerManager.recordMilestone('hold_revealed', 'Held for 3 seconds');
-        }
-      }, 60);
-    }
-
-    function cancelHold() {
-      if (isRevealed) return;
-      clearInterval(holdTimer);
-      if (ringFill) ringFill.style.strokeDashoffset = 339.292;
-      if (hint) hint.textContent = "Hold for full 3 seconds, Peda!";
-    }
-
-    if (holdBtn) {
-      holdBtn.addEventListener('mousedown', startHold);
-      holdBtn.addEventListener('touchstart', startHold, { passive: true });
-      window.addEventListener('mouseup', cancelHold);
-      window.addEventListener('touchend', cancelHold);
+          if (revealedCard) revealedCard.style.display = 'block';
+          AnswerManager.recordMilestone('truth_scanned');
+        }, 2200);
+      };
     }
 
     if (btnNext) btnNext.onclick = () => StoryRouter.goToScreen(15, 'next');

@@ -752,34 +752,37 @@ def generate_index_html():
     </section>
 
     <!-- ====================================================================
-         SCENE 14: HOLD-TO-REVEAL 3S MYSTERY
+         SCENE 14: SIBLING LIE DETECTOR & TRUTH SCANNER
          ==================================================================== -->
     <section class="story-screen dark-scene" id="scene-14" data-scene="14">
       <div class="screen-box glass-card">
         <div class="screen-badge glow-badge">
-          <span>⏳ Chapter 14 • Unfiltered Truth</span>
+          <span>⚡ Chapter 14 • Sibling Lie Detector</span>
         </div>
 
-        <h1 class="scene-title" style="color: #FDE68A;">What Bhai Really Thinks</h1>
-        <p class="scene-subtitle" style="color: #FCE7F3;">Press and hold the button for 3 seconds without letting go.</p>
+        <h1 class="scene-title" style="color: #FDE68A;">Sibling Truth Scanner</h1>
+        <p class="scene-subtitle" style="color: #FCE7F3;">Tap the biometric pad below to scan and analyze the unfiltered truth!</p>
 
-        <!-- 3-Second Hold Button with SVG Progress Ring -->
-        <div class="hold-button-stage" id="hold-button-stage">
-          <div class="hold-svg-ring-wrap">
-            <svg class="hold-svg-ring" viewBox="0 0 120 120">
-              <circle class="ring-bg" cx="60" cy="60" r="54"></circle>
-              <circle class="ring-fill" id="hold-ring-fill" cx="60" cy="60" r="54"></circle>
-            </svg>
-            <button class="hold-action-btn" id="btn-hold-action">
-              <span>HOLD</span>
-            </button>
+        <!-- Biometric Lie Detector Scanner Stage -->
+        <div class="truth-scanner-stage" id="truth-scanner-stage">
+          <button class="biometric-scanner-pad" id="btn-scan-truth" aria-label="Tap to Scan Truth">
+            <div class="scanner-laser-sweep" id="scanner-laser-sweep"></div>
+            <span class="scanner-thumb-icon">🖲️</span>
+            <span class="scanner-hint-text">TAP TO SCAN TRUTH</span>
+          </button>
+
+          <!-- Live Real-Time Diagnostic Feed -->
+          <div class="scanner-live-diagnostic" id="scanner-live-diagnostic" style="display: none;">
+            <div class="diagnostic-line" id="diag-1">⚡ Analyzing Nautanki Level... <strong style="color: #FBBF24;">99.8% (Critical)</strong></div>
+            <div class="diagnostic-line" id="diag-2" style="opacity: 0;">🍕 Checking Food Theft Records... <strong style="color: #F472B6;">100% GUILTY</strong></div>
+            <div class="diagnostic-line" id="diag-3" style="opacity: 0;">👑 Calculating Madam Ji Attitude... <strong style="color: #34D399;">OFF THE CHARTS</strong></div>
           </div>
-          <p class="hold-status-hint" id="hold-status-hint">Press and hold...</p>
         </div>
 
         <div class="hold-revealed-card" id="hold-revealed-card" style="display: none;">
+          <div class="truth-verified-badge" style="display: inline-block; background: rgba(245, 158, 11, 0.2); border: 1px solid #F59E0B; color: #FDE68A; padding: 4px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 800; margin-bottom: 12px;">👑 UNFILTERED TRUTH UNLOCKED</div>
           <p class="hold-revealed-p1">"You're annoying..."</p>
-          <p class="hold-revealed-p2">"But you're my favorite annoying person in the world."</p>
+          <p class="hold-revealed-p2">"But you're my favorite annoying person in the whole universe."</p>
           <div class="screen-action-wrap">
             <button id="btn-hold-next" class="btn-primary-glow">
               <span class="btn-shine"></span>
@@ -2587,7 +2590,7 @@ body::before {
 .brush-color-btn.active { transform: scale(1.2); outline: 2px solid #F59E0B; }
 .drawing-success-text { font-size: 1.35rem; color: var(--color-pink-deep); font-weight: 700; }
 
-/* --- 20. SCENE 13 & 14: HEART GAUGE & HOLD REVEAL --- */
+/* --- 20. SCENE 13 & 14: HEART GAUGE & SIBLING TRUTH SCANNER --- */
 .heart-gauge-container { margin: 20px auto; max-width: 320px; text-align: center; }
 .giant-beating-heart { position: relative; font-size: 5rem; margin-bottom: 12px; display: inline-block; cursor: pointer; }
 .heart-meter-track { width: 100%; height: 14px; background: rgba(225, 29, 72, 0.12); border-radius: 999px; overflow: hidden; margin-bottom: 8px; }
@@ -2596,15 +2599,94 @@ body::before {
 .heart-maxed-title { font-size: 1.8rem; color: var(--color-pink-deep); }
 .heart-maxed-sub { font-size: 1.05rem; color: var(--color-rose-dark); }
 
-/* Hold Ring Button */
-.hold-button-stage { margin: 24px auto; width: 130px; height: 130px; position: relative; display: flex; align-items: center; justify-content: center; }
-.hold-svg-ring-wrap { position: relative; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; }
-.hold-svg-ring { position: absolute; inset: 0; width: 100%; height: 100%; transform: rotate(-90deg); }
-.ring-bg { fill: none; stroke: rgba(255, 255, 255, 0.15); stroke-width: 8; }
-.ring-fill { fill: none; stroke: #F59E0B; stroke-width: 8; stroke-dasharray: 339.292; stroke-dashoffset: 339.292; transition: stroke-dashoffset 0.05s linear; }
-.hold-action-btn { width: 92px; height: 92px; border-radius: 50%; background: linear-gradient(135deg, #E11D48 0%, #9F1239 100%); border: 2px solid #FDE68A; color: #FFFFFF; font-weight: 800; font-size: 1.1rem; cursor: pointer; user-select: none; touch-action: none; }
-.hold-action-btn:active { transform: scale(0.95); }
-.hold-status-hint { position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); width: 220px; font-size: 0.82rem; color: #FCE7F3; }
+/* Biometric Sibling Truth Scanner */
+.truth-scanner-stage {
+  margin: 20px auto;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.biometric-scanner-pad {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 28px;
+  background: radial-gradient(circle, #2D0D1E 0%, #15050F 100%);
+  border: 2.5px solid #F59E0B;
+  box-shadow: 0 0 25px rgba(245, 158, 11, 0.4), inset 0 0 15px rgba(245, 158, 11, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.biometric-scanner-pad:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 35px rgba(245, 158, 11, 0.6);
+}
+
+.biometric-scanner-pad:active {
+  transform: scale(0.96);
+}
+
+.scanner-laser-sweep {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: #34D399;
+  box-shadow: 0 0 16px #34D399;
+  animation: laser-sweep 1.2s infinite ease-in-out;
+  z-index: 5;
+}
+
+.biometric-scanner-pad.scanning .scanner-laser-sweep {
+  display: block;
+}
+
+.scanner-thumb-icon {
+  font-size: 3rem;
+  margin-bottom: 4px;
+  animation: pulse-subtle 2s infinite ease-in-out;
+}
+
+.scanner-hint-text {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #FDE68A;
+  letter-spacing: 0.8px;
+}
+
+.scanner-live-diagnostic {
+  background: rgba(18, 7, 14, 0.95);
+  border: 1.5px solid rgba(245, 158, 11, 0.35);
+  border-radius: 14px;
+  padding: 14px 18px;
+  width: 100%;
+  text-align: left;
+  font-family: monospace;
+  font-size: 0.92rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+}
+
+.diagnostic-line {
+  margin-bottom: 6px;
+  color: #E2E8F0;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.diagnostic-line:last-child {
+  margin-bottom: 0;
+}
+
 .hold-revealed-p1 { font-size: 1.6rem; color: #FDE68A; font-weight: 700; margin-bottom: 6px; }
 .hold-revealed-p2 { font-size: 1.8rem; color: #F472B6; font-weight: 800; }
 
@@ -2910,6 +2992,20 @@ def generate_script_js():
 
 (function () {
   'use strict';
+
+  // ==========================================================================
+  // 0. API CONFIGURATION
+  // ==========================================================================
+  // In local development (localhost / 127.0.0.1), requests automatically route to
+  // http://localhost:8000.
+  // In production on Vercel, replace "https://YOUR-RENDER-BACKEND.onrender.com" below
+  // with your actual live Render Web Service URL!
+  // ==========================================================================
+  const API_CONFIG = {
+    BASE_URL: (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
+      ? "http://localhost:8000"
+      : "https://YOUR-RENDER-BACKEND.onrender.com" // <-- Replace with your Render URL
+  };
 
   const TOTAL_SCREENS = 27;
   let currentScreen = 1;
@@ -3454,9 +3550,7 @@ def generate_script_js():
   // 5. ANSWER & MILESTONE MANAGER (FastAPI Backend + Offline Queue)
   // ==========================================================================
   const AnswerManager = (function () {
-    const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-      ? 'http://127.0.0.1:8000'
-      : '';
+    const API_BASE = API_CONFIG.BASE_URL;
 
     let sessionId = sessionStorage.getItem('rakhi_session_id');
     if (!sessionId) {
@@ -3468,26 +3562,32 @@ def generate_script_js():
 
     function getOfflineQueue() {
       try {
-        const item = localStorage.getItem('rakhi_offline_answers');
+        const item = localStorage.getItem('rakhi_offline_queue');
         return item ? JSON.parse(item) : [];
       } catch (e) { return []; }
     }
 
     function saveOfflineQueue(queue) {
-      try { localStorage.setItem('rakhi_offline_answers', JSON.stringify(queue)); } catch (e) {}
+      try { localStorage.setItem('rakhi_offline_queue', JSON.stringify(queue)); } catch (e) {}
     }
 
     async function sendPayload(endpoint, data) {
-      if (!API_BASE && !window.location.origin.startsWith('http')) return false;
+      if (!API_BASE || API_BASE.includes('YOUR-RENDER-BACKEND')) return false;
       try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
         const res = await fetch(`${API_BASE}${endpoint}`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),
-          mode: 'cors'
+          mode: 'cors',
+          signal: controller.signal
         });
+        clearTimeout(timeoutId);
         return res.ok;
-      } catch (e) { return false; }
+      } catch (e) {
+        return false;
+      }
     }
 
     async function recordAnswer(questionId, questionText, answerText) {
@@ -3501,15 +3601,26 @@ def generate_script_js():
       const success = await sendPayload('/api/answer', payload);
       if (!success) {
         const queue = getOfflineQueue();
-        if (!queue.some(item => item.question_id === payload.question_id)) {
-          queue.push(payload);
+        if (!queue.some(item => item.type === 'answer' && item.payload.question_id === payload.question_id)) {
+          queue.push({ type: 'answer', endpoint: '/api/answer', payload });
           saveOfflineQueue(queue);
         }
       }
     }
 
-    async function recordMilestone(milestoneId, milestoneName) {
-      await recordAnswer(`milestone_${milestoneId}`, 'Milestone Reached', milestoneName);
+    async function recordMilestone(milestoneName) {
+      const payload = {
+        session_id: sessionId,
+        milestone: String(milestoneName)
+      };
+      const success = await sendPayload('/api/milestone', payload);
+      if (!success) {
+        const queue = getOfflineQueue();
+        if (!queue.some(item => item.type === 'milestone' && item.payload.milestone === payload.milestone)) {
+          queue.push({ type: 'milestone', endpoint: '/api/milestone', payload });
+          saveOfflineQueue(queue);
+        }
+      }
     }
 
     async function recordCompletion() {
@@ -3517,7 +3628,7 @@ def generate_script_js():
       const success = await sendPayload('/api/complete', payload);
       if (!success) {
         const queue = getOfflineQueue();
-        queue.push({ ...payload, is_completion: true });
+        queue.push({ type: 'complete', endpoint: '/api/complete', payload });
         saveOfflineQueue(queue);
       }
     }
@@ -3527,16 +3638,14 @@ def generate_script_js():
       if (queue.length === 0) return;
       const remaining = [];
       for (const item of queue) {
-        const ok = item.is_completion
-          ? await sendPayload('/api/complete', item)
-          : await sendPayload('/api/answer', item);
+        const ok = await sendPayload(item.endpoint, item.payload);
         if (!ok) remaining.push(item);
       }
       saveOfflineQueue(remaining);
     }
 
     window.addEventListener('online', retryOfflineQueue);
-    setInterval(retryOfflineQueue, 20000);
+    setInterval(retryOfflineQueue, 15000);
 
     return { getSessionId: () => sessionId, recordAnswer, recordMilestone, recordCompletion };
   })();
@@ -4378,53 +4487,42 @@ def generate_script_js():
     if (btnNext) btnNext.onclick = () => StoryRouter.goToScreen(14, 'next');
   }
 
-  // --- Scene 14: Hold-to-Reveal 3s Mystery ---
+  // --- Scene 14: Sibling Lie Detector & Truth Scanner ---
   function setupScene14() {
-    const holdBtn = document.getElementById('btn-hold-action');
-    const ringFill = document.getElementById('hold-ring-fill');
-    const hint = document.getElementById('hold-status-hint');
-    const stage = document.getElementById('hold-button-stage');
-    const card = document.getElementById('hold-revealed-card');
+    const scanBtn = document.getElementById('btn-scan-truth');
+    const diagBox = document.getElementById('scanner-live-diagnostic');
+    const diag2 = document.getElementById('diag-2');
+    const diag3 = document.getElementById('diag-3');
+    const revealedCard = document.getElementById('hold-revealed-card');
     const btnNext = document.getElementById('btn-hold-next');
+    let isScanned = false;
 
-    let holdTimer = null;
-    let holdProgress = 0;
-    let isRevealed = false;
+    if (scanBtn) {
+      scanBtn.onclick = () => {
+        if (isScanned) return;
+        isScanned = true;
+        scanBtn.classList.add('scanning');
+        AudioManager.playPop();
+        if (diagBox) diagBox.style.display = 'block';
 
-    function startHold() {
-      if (isRevealed) return;
-      holdProgress = 0;
-      if (hint) hint.textContent = "Holding...";
+        setTimeout(() => {
+          AudioManager.playBell();
+          if (diag2) { diag2.style.opacity = '1'; }
+        }, 700);
 
-      holdTimer = setInterval(() => {
-        holdProgress += 2;
-        const offset = 339.292 - (339.292 * (holdProgress / 100));
-        if (ringFill) ringFill.style.strokeDashoffset = offset;
+        setTimeout(() => {
+          AudioManager.playBell();
+          if (diag3) { diag3.style.opacity = '1'; }
+        }, 1400);
 
-        if (holdProgress >= 100) {
-          clearInterval(holdTimer);
-          isRevealed = true;
+        setTimeout(() => {
+          scanBtn.classList.remove('scanning');
           AudioManager.playFanfare();
           ParticleManager.fireConfetti(window.innerWidth / 2, window.innerHeight * 0.45, 45);
-          if (stage) stage.style.display = 'none';
-          if (card) card.style.display = 'block';
-          AnswerManager.recordMilestone('hold_revealed', 'Held for 3 seconds');
-        }
-      }, 60);
-    }
-
-    function cancelHold() {
-      if (isRevealed) return;
-      clearInterval(holdTimer);
-      if (ringFill) ringFill.style.strokeDashoffset = 339.292;
-      if (hint) hint.textContent = "Hold for full 3 seconds, Peda!";
-    }
-
-    if (holdBtn) {
-      holdBtn.addEventListener('mousedown', startHold);
-      holdBtn.addEventListener('touchstart', startHold, { passive: true });
-      window.addEventListener('mouseup', cancelHold);
-      window.addEventListener('touchend', cancelHold);
+          if (revealedCard) revealedCard.style.display = 'block';
+          AnswerManager.recordMilestone('truth_scanned');
+        }, 2200);
+      };
     }
 
     if (btnNext) btnNext.onclick = () => StoryRouter.goToScreen(15, 'next');
@@ -5041,16 +5139,32 @@ def generate_script_js():
 
 def generate_backend():
     database_py = """# -*- coding: utf-8 -*-
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
-import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./rakhi_answers.db")
+raw_db_url = os.getenv("DATABASE_URL", "sqlite:///./rakhi_answers.db")
 
-engine = create_engine(
-    DATABASE_URL, connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
-)
+# SQLAlchemy 2.0 requires postgresql:// instead of legacy postgres://
+if raw_db_url.startswith("postgres://"):
+    raw_db_url = raw_db_url.replace("postgres://", "postgresql://", 1)
+
+DATABASE_URL = raw_db_url
+
+if "sqlite" in DATABASE_URL:
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False}
+    )
+else:
+    engine = create_engine(
+        DATABASE_URL,
+        pool_size=10,
+        max_overflow=20,
+        pool_pre_ping=True
+    )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -5078,7 +5192,8 @@ class VisitorSession(Base):
     is_completed = Column(Boolean, default=False)
     completed_at = Column(DateTime, nullable=True)
 
-    answers = relationship("SessionAnswer", back_populates="session", cascade="all, delete-orphan")
+    answers = relationship("SessionAnswer", back_populates="session", cascade="all, delete-orphan", order_by="SessionAnswer.created_at")
+    milestones = relationship("SessionMilestone", back_populates="session", cascade="all, delete-orphan", order_by="SessionMilestone.created_at")
 
 class SessionAnswer(Base):
     __tablename__ = "session_answers"
@@ -5095,6 +5210,20 @@ class SessionAnswer(Base):
     )
 
     session = relationship("VisitorSession", back_populates="answers")
+
+class SessionMilestone(Base):
+    __tablename__ = "session_milestones"
+
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
+    session_id = Column(String, ForeignKey("visitor_sessions.id"), index=True)
+    milestone = Column(String, index=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    __table_args__ = (
+        UniqueConstraint("session_id", "milestone", name="uq_session_milestone"),
+    )
+
+    session = relationship("VisitorSession", back_populates="milestones")
 """
     with open(os.path.join(BACKEND_DIR, "models.py"), "w", encoding="utf-8") as f:
         f.write(models_py)
@@ -5111,6 +5240,10 @@ class AnswerCreate(BaseModel):
     answer: str
     timestamp: Optional[str] = None
 
+class MilestoneCreate(BaseModel):
+    session_id: str
+    milestone: str
+
 class CompleteSession(BaseModel):
     session_id: str
     completed_at: Optional[str] = None
@@ -5126,7 +5259,13 @@ class AnswerOut(BaseModel):
 
     class Config:
         from_attributes = True
-        orm_mode = True
+
+class MilestoneOut(BaseModel):
+    milestone: str
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
 
 class SessionOut(BaseModel):
     id: str
@@ -5134,10 +5273,10 @@ class SessionOut(BaseModel):
     is_completed: bool
     completed_at: Optional[datetime] = None
     answers_count: int = 0
+    milestones_count: int = 0
 
     class Config:
         from_attributes = True
-        orm_mode = True
 
 class SessionDetailOut(BaseModel):
     id: str
@@ -5145,10 +5284,10 @@ class SessionDetailOut(BaseModel):
     is_completed: bool
     completed_at: Optional[datetime] = None
     answers: List[AnswerOut] = []
+    milestones: List[MilestoneOut] = []
 
     class Config:
         from_attributes = True
-        orm_mode = True
 """
     with open(os.path.join(BACKEND_DIR, "schemas.py"), "w", encoding="utf-8") as f:
         f.write(schemas_py)
@@ -5170,16 +5309,28 @@ import schemas
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title="Rakhi Surprise Answer Collection API",
-    description="Interactive answer collection and milestone tracker for Prerna's Rakhi surprise.",
-    version="2.0.0"
+    title="Rakhi Surprise Answer & Milestone API",
+    description="Backend service for Prerna's interactive Rakhi surprise experience.",
+    version="2.1.0"
 )
 
-ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://127.0.0.1:5500,http://localhost:8000,http://127.0.0.1:8000,http://localhost:5173").split(",")
+frontend_url = os.getenv("FRONTEND_URL", "").strip()
+allowed_origins = [
+    "http://localhost:5500",
+    "http://127.0.0.1:5500",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:8000",
+    "http://127.0.0.1:8000"
+]
+if frontend_url:
+    allowed_origins.append(frontend_url.rstrip("/"))
+
+is_prod = os.getenv("ENVIRONMENT") == "production"
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=ALLOWED_ORIGINS if os.getenv("ENVIRONMENT") == "production" else ["*"],
+    allow_origins=allowed_origins if is_prod else ["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -5189,10 +5340,13 @@ ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD", "peda2026")
 
 @app.get("/health")
 def health_check():
-    return {"status": "ok", "app": "Rakhi Surprise API v2", "timestamp": datetime.utcnow().isoformat()}
+    return {"status": "ok"}
 
 @app.post("/api/answer", status_code=status.HTTP_200_OK)
 def submit_answer(payload: schemas.AnswerCreate, db: Session = Depends(get_db)):
+    if not payload.session_id or not payload.question_id:
+        raise HTTPException(status_code=400, detail="session_id and question_id are required")
+
     session_obj = db.query(models.VisitorSession).filter(models.VisitorSession.id == payload.session_id).first()
     if not session_obj:
         session_obj = models.VisitorSession(id=payload.session_id, started_at=datetime.utcnow())
@@ -5218,7 +5372,34 @@ def submit_answer(payload: schemas.AnswerCreate, db: Session = Depends(get_db)):
         db.add(new_answer)
 
     db.commit()
-    return {"status": "success", "message": "Answer/Milestone recorded"}
+    return {"status": "success", "message": "Answer recorded successfully"}
+
+@app.post("/api/milestone", status_code=status.HTTP_200_OK)
+def submit_milestone(payload: schemas.MilestoneCreate, db: Session = Depends(get_db)):
+    if not payload.session_id or not payload.milestone:
+        raise HTTPException(status_code=400, detail="session_id and milestone are required")
+
+    session_obj = db.query(models.VisitorSession).filter(models.VisitorSession.id == payload.session_id).first()
+    if not session_obj:
+        session_obj = models.VisitorSession(id=payload.session_id, started_at=datetime.utcnow())
+        db.add(session_obj)
+        db.commit()
+
+    existing_milestone = db.query(models.SessionMilestone).filter(
+        models.SessionMilestone.session_id == payload.session_id,
+        models.SessionMilestone.milestone == payload.milestone
+    ).first()
+
+    if not existing_milestone:
+        new_milestone = models.SessionMilestone(
+            session_id=payload.session_id,
+            milestone=payload.milestone,
+            created_at=datetime.utcnow()
+        )
+        db.add(new_milestone)
+        db.commit()
+
+    return {"status": "success", "message": "Milestone recorded successfully"}
 
 @app.post("/api/complete", status_code=status.HTTP_200_OK)
 def complete_session(payload: schemas.CompleteSession, db: Session = Depends(get_db)):
@@ -5230,12 +5411,12 @@ def complete_session(payload: schemas.CompleteSession, db: Session = Depends(get
     session_obj.is_completed = True
     session_obj.completed_at = datetime.utcnow()
     db.commit()
-    return {"status": "success", "message": "Session completed"}
+    return {"status": "success", "message": "Session marked as completed"}
 
 @app.post("/api/admin/login")
 def admin_login(payload: schemas.AdminLogin):
     if payload.password != ADMIN_PASSWORD:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid password")
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid admin credentials")
     return {"status": "authenticated", "token": "admin-session-authenticated"}
 
 def verify_admin(authorization: str = Header(None)):
@@ -5253,20 +5434,23 @@ def get_admin_sessions(db: Session = Depends(get_db), auth: bool = Depends(verif
             "started_at": s.started_at,
             "is_completed": s.is_completed,
             "completed_at": s.completed_at,
-            "answers_count": len(s.answers)
+            "answers_count": len(s.answers),
+            "milestones_count": len(s.milestones)
         })
-    
+
     total = len(sessions)
     completed = sum(1 for s in sessions if s.is_completed)
     in_progress = total - completed
     total_answers = db.query(models.SessionAnswer).count()
+    total_milestones = db.query(models.SessionMilestone).count()
 
     return {
         "stats": {
             "total_visitors": total,
             "completed": completed,
             "in_progress": in_progress,
-            "total_answers": total_answers
+            "total_answers": total_answers,
+            "total_milestones": total_milestones
         },
         "sessions": results
     }
@@ -5276,7 +5460,7 @@ def get_admin_session_detail(session_id: str, db: Session = Depends(get_db), aut
     session_obj = db.query(models.VisitorSession).filter(models.VisitorSession.id == session_id).first()
     if not session_obj:
         raise HTTPException(status_code=404, detail="Session not found")
-    
+
     answers_out = [
         {
             "question_id": a.question_id,
@@ -5287,12 +5471,21 @@ def get_admin_session_detail(session_id: str, db: Session = Depends(get_db), aut
         for a in session_obj.answers
     ]
 
+    milestones_out = [
+        {
+            "milestone": m.milestone,
+            "created_at": m.created_at
+        }
+        for m in session_obj.milestones
+    ]
+
     return {
         "id": session_obj.id,
         "started_at": session_obj.started_at,
         "is_completed": session_obj.is_completed,
         "completed_at": session_obj.completed_at,
-        "answers": answers_out
+        "answers": answers_out,
+        "milestones": milestones_out
     }
 
 if __name__ == "__main__":
@@ -5306,6 +5499,7 @@ if __name__ == "__main__":
 uvicorn>=0.22.0
 sqlalchemy>=2.0.0
 pydantic>=2.0.0
+psycopg2-binary>=2.9.6
 python-dotenv>=1.0.0
 """
     with open(os.path.join(BACKEND_DIR, "requirements.txt"), "w", encoding="utf-8") as f:
@@ -5315,7 +5509,7 @@ python-dotenv>=1.0.0
 ADMIN_PASSWORD=peda2026
 DATABASE_URL=sqlite:///./rakhi_answers.db
 ENVIRONMENT=development
-ALLOWED_ORIGINS=http://localhost:3000,http://127.0.0.1:5500,http://localhost:8000,http://127.0.0.1:8000
+FRONTEND_URL=http://localhost:5500
 """
     with open(os.path.join(BACKEND_DIR, ".env"), "w", encoding="utf-8") as f:
         f.write(env_file)
@@ -5557,9 +5751,35 @@ def generate_dashboard():
 
         const container = document.getElementById('qa-container');
         container.innerHTML = '';
+
+        if (data.milestones && data.milestones.length > 0) {
+          const mWrap = document.createElement('div');
+          mWrap.style.marginBottom = '18px';
+          mWrap.innerHTML = '<h3 style="color: var(--gold); font-size: 0.95rem; margin-bottom: 8px;">🚩 Reached Milestones:</h3>';
+          const mList = document.createElement('div');
+          mList.style.display = 'flex';
+          mList.style.flexWrap = 'wrap';
+          mList.style.gap = '6px';
+          data.milestones.forEach(m => {
+            const mBadge = document.createElement('span');
+            mBadge.className = 'badge badge-success';
+            mBadge.textContent = '✨ ' + m.milestone.replace(/_/g, ' ');
+            mList.appendChild(mBadge);
+          });
+          mWrap.appendChild(mList);
+          container.appendChild(mWrap);
+        }
+
         if (data.answers.length === 0) {
-          container.innerHTML = '<p style="color: var(--text-muted);">No milestones/answers submitted in this session yet.</p>';
+          container.innerHTML += '<p style="color: var(--text-muted);">No answers submitted in this session yet.</p>';
         } else {
+          const qHeader = document.createElement('h3');
+          qHeader.style.color = 'var(--gold)';
+          qHeader.style.fontSize = '0.95rem';
+          qHeader.style.marginBottom = '8px';
+          qHeader.textContent = '📝 Q&A Responses:';
+          container.appendChild(qHeader);
+
           data.answers.forEach(a => {
             const card = document.createElement('div');
             card.className = 'qa-card';

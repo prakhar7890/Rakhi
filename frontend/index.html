@@ -721,34 +721,37 @@
     </section>
 
     <!-- ====================================================================
-         SCENE 14: HOLD-TO-REVEAL 3S MYSTERY
+         SCENE 14: SIBLING LIE DETECTOR & TRUTH SCANNER
          ==================================================================== -->
     <section class="story-screen dark-scene" id="scene-14" data-scene="14">
       <div class="screen-box glass-card">
         <div class="screen-badge glow-badge">
-          <span>⏳ Chapter 14 • Unfiltered Truth</span>
+          <span>⚡ Chapter 14 • Sibling Lie Detector</span>
         </div>
 
-        <h1 class="scene-title" style="color: #FDE68A;">What Bhai Really Thinks</h1>
-        <p class="scene-subtitle" style="color: #FCE7F3;">Press and hold the button for 3 seconds without letting go.</p>
+        <h1 class="scene-title" style="color: #FDE68A;">Sibling Truth Scanner</h1>
+        <p class="scene-subtitle" style="color: #FCE7F3;">Tap the biometric pad below to scan and analyze the unfiltered truth!</p>
 
-        <!-- 3-Second Hold Button with SVG Progress Ring -->
-        <div class="hold-button-stage" id="hold-button-stage">
-          <div class="hold-svg-ring-wrap">
-            <svg class="hold-svg-ring" viewBox="0 0 120 120">
-              <circle class="ring-bg" cx="60" cy="60" r="54"></circle>
-              <circle class="ring-fill" id="hold-ring-fill" cx="60" cy="60" r="54"></circle>
-            </svg>
-            <button class="hold-action-btn" id="btn-hold-action">
-              <span>HOLD</span>
-            </button>
+        <!-- Biometric Lie Detector Scanner Stage -->
+        <div class="truth-scanner-stage" id="truth-scanner-stage">
+          <button class="biometric-scanner-pad" id="btn-scan-truth" aria-label="Tap to Scan Truth">
+            <div class="scanner-laser-sweep" id="scanner-laser-sweep"></div>
+            <span class="scanner-thumb-icon">🖲️</span>
+            <span class="scanner-hint-text">TAP TO SCAN TRUTH</span>
+          </button>
+
+          <!-- Live Real-Time Diagnostic Feed -->
+          <div class="scanner-live-diagnostic" id="scanner-live-diagnostic" style="display: none;">
+            <div class="diagnostic-line" id="diag-1">⚡ Analyzing Nautanki Level... <strong style="color: #FBBF24;">99.8% (Critical)</strong></div>
+            <div class="diagnostic-line" id="diag-2" style="opacity: 0;">🍕 Checking Food Theft Records... <strong style="color: #F472B6;">100% GUILTY</strong></div>
+            <div class="diagnostic-line" id="diag-3" style="opacity: 0;">👑 Calculating Madam Ji Attitude... <strong style="color: #34D399;">OFF THE CHARTS</strong></div>
           </div>
-          <p class="hold-status-hint" id="hold-status-hint">Press and hold...</p>
         </div>
 
         <div class="hold-revealed-card" id="hold-revealed-card" style="display: none;">
+          <div class="truth-verified-badge" style="display: inline-block; background: rgba(245, 158, 11, 0.2); border: 1px solid #F59E0B; color: #FDE68A; padding: 4px 14px; border-radius: 999px; font-size: 0.8rem; font-weight: 800; margin-bottom: 12px;">👑 UNFILTERED TRUTH UNLOCKED</div>
           <p class="hold-revealed-p1">"You're annoying..."</p>
-          <p class="hold-revealed-p2">"But you're my favorite annoying person in the world."</p>
+          <p class="hold-revealed-p2">"But you're my favorite annoying person in the whole universe."</p>
           <div class="screen-action-wrap">
             <button id="btn-hold-next" class="btn-primary-glow">
               <span class="btn-shine"></span>
