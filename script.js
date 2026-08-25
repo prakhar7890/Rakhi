@@ -11,13 +11,13 @@
   // ==========================================================================
   // In local development (localhost / 127.0.0.1), requests automatically route to
   // http://localhost:8000.
-  // In production on Vercel, replace "https://YOUR-RENDER-BACKEND.onrender.com" below
-  // with your actual live Render Web Service URL!
+  // In production on Vercel, requests route to Render:
+  // https://rakhi-surprise-api.onrender.com
   // ==========================================================================
   const API_CONFIG = {
     BASE_URL: (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
       ? "http://localhost:8000"
-      : "https://YOUR-RENDER-BACKEND.onrender.com" // <-- Replace with your Render URL
+      : "https://rakhi-surprise-api.onrender.com"
   };
 
   const TOTAL_SCREENS = 27;
@@ -585,7 +585,7 @@
     }
 
     async function sendPayload(endpoint, data) {
-      if (!API_BASE || API_BASE.includes('YOUR-RENDER-BACKEND')) return false;
+      if (!API_BASE) return false;
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 6000);
@@ -597,8 +597,14 @@
           signal: controller.signal
         });
         clearTimeout(timeoutId);
-        return res.ok;
+        if (!res.ok) {
+          const errText = await res.text().catch(() => '');
+          console.warn(`API request failed: ${endpoint} (HTTP ${res.status}${errText ? ': ' + errText.substring(0, 100) : ''})`);
+          return false;
+        }
+        return true;
       } catch (e) {
+        console.warn(`API request failed: ${endpoint} (${e.name === 'AbortError' ? 'Request timed out' : 'Network/Server unavailable'})`);
         return false;
       }
     }

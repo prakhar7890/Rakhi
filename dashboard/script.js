@@ -3,7 +3,7 @@
  */
 const API_BASE = (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
   ? "http://localhost:8000"
-  : "https://YOUR-RENDER-BACKEND.onrender.com";
+  : "https://rakhi-surprise-api.onrender.com";
 
 let authToken = sessionStorage.getItem('admin_token');
 

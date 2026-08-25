@@ -2998,13 +2998,13 @@ def generate_script_js():
   // ==========================================================================
   // In local development (localhost / 127.0.0.1), requests automatically route to
   // http://localhost:8000.
-  // In production on Vercel, replace "https://YOUR-RENDER-BACKEND.onrender.com" below
-  // with your actual live Render Web Service URL!
+  // In production on Vercel, requests route to Render:
+  // https://rakhi-surprise-api.onrender.com
   // ==========================================================================
   const API_CONFIG = {
     BASE_URL: (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")
       ? "http://localhost:8000"
-      : "https://YOUR-RENDER-BACKEND.onrender.com" // <-- Replace with your Render URL
+      : "https://rakhi-surprise-api.onrender.com"
   };
 
   const TOTAL_SCREENS = 27;
@@ -3572,7 +3572,7 @@ def generate_script_js():
     }
 
     async function sendPayload(endpoint, data) {
-      if (!API_BASE || API_BASE.includes('YOUR-RENDER-BACKEND')) return false;
+      if (!API_BASE) return false;
       try {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 6000);
@@ -3584,8 +3584,14 @@ def generate_script_js():
           signal: controller.signal
         });
         clearTimeout(timeoutId);
-        return res.ok;
+        if (!res.ok) {
+          const errText = await res.text().catch(() => '');
+          console.warn(`API request failed: ${endpoint} (HTTP ${res.status}${errText ? ': ' + errText.substring(0, 100) : ''})`);
+          return false;
+        }
+        return true;
       } catch (e) {
+        console.warn(`API request failed: ${endpoint} (${e.name === 'AbortError' ? 'Request timed out' : 'Network/Server unavailable'})`);
         return false;
       }
     }
@@ -5394,16 +5400,22 @@ def submit_milestone(payload: schemas.MilestoneCreate, db: Session = Depends(get
         models.SessionMilestone.milestone == payload.milestone
     ).first()
 
-    if not existing_milestone:
-        new_milestone = models.SessionMilestone(
-            session_id=payload.session_id,
-            milestone=payload.milestone,
-            created_at=datetime.utcnow()
-        )
-        db.add(new_milestone)
-        db.commit()
+    if existing_milestone:
+        return {
+            "status": "success",
+            "message": "Milestone already recorded.",
+            "idempotent": True
+        }
 
-    return {"status": "success", "message": "Milestone recorded successfully"}
+    new_milestone = models.SessionMilestone(
+        session_id=payload.session_id,
+        milestone=payload.milestone,
+        created_at=datetime.utcnow()
+    )
+    db.add(new_milestone)
+    db.commit()
+
+    return {"status": "success", "message": "Milestone recorded successfully", "idempotent": False}
 
 @app.post("/api/complete", status_code=status.HTTP_200_OK)
 def complete_session(payload: schemas.CompleteSession, db: Session = Depends(get_db)):
@@ -5640,9 +5652,9 @@ def generate_dashboard():
   </div>
 
   <script>
-    const API_BASE = window.location.origin.includes('localhost') || window.location.origin.includes('127.0.0.1')
-      ? 'http://127.0.0.1:8000'
-      : '';
+    const API_BASE = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      ? 'http://localhost:8000'
+      : 'https://rakhi-surprise-api.onrender.com';
 
     let authToken = sessionStorage.getItem('admin_token');
 

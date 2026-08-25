@@ -65,7 +65,6 @@ def submit_answer(payload: schemas.AnswerCreate, db: Session = Depends(get_db)):
     ).first()
 
     if existing_answer:
-        # Idempotency Requirement: Preserve original submitted answer, do not create duplicate rows or overwrite
         return {
             "status": "success",
             "message": "Answer already recorded; original answer preserved.",

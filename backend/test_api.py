@@ -8,6 +8,7 @@ import unittest
 from fastapi.testclient import TestClient
 import os
 import sys
+import time
 
 # Ensure backend directory is in path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -20,7 +21,7 @@ class TestRakhiBackend(unittest.TestCase):
     def setUpClass(cls):
         Base.metadata.create_all(bind=engine)
         cls.client = TestClient(app)
-        cls.test_session_id = "test-session-idempotent-99999"
+        cls.test_session_id = f"test-sess-{int(time.time()*1000)}"
 
     def test_01_health_check(self):
         res = self.client.get("/health")
@@ -118,7 +119,7 @@ class TestRakhiBackend(unittest.TestCase):
         detail_data = res_detail.json()
         self.assertEqual(detail_data["id"], self.test_session_id)
         self.assertTrue(detail_data["is_completed"])
-        
+
         # Verify the saved answer is indeed "Original Peda" and only 1 answer exists for that question
         answers = [a for a in detail_data["answers"] if a["question_id"] == "q_idempotent_test"]
         self.assertEqual(len(answers), 1)
